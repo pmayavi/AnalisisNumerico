@@ -27,6 +27,36 @@ def biseccion(f, a, b, tol, Nmax):
     err = E
     return x, iter, err
 
+#f, funcion continua
+#a, extremo derecho del intervalo inicial
+#b, extremo final del intervalo final
+#tol, tolerancia
+#Nmax, maximo de iteraciones
+def reglafalsa(f, a, b, tol, Nmax):
+    fa = f(a)
+    fb = f(b)
+    pm = (fb * a - fa * b) / (fb - fa)
+    fpm = f(pm)
+    E = 1000
+    cont = 1
+    
+    while E > tol and cont < Nmax:
+        if fa * fpm < 0:
+            b = pm
+        else:
+            a = pm
+        p0 = pm
+        pm = (f(b) * a - f(a) * b) / (f(b) - f(a))
+        fpm = f(pm)
+        E = abs(pm - p0)
+        cont = cont + 1
+        
+    x = pm
+    iter = cont
+    err = E
+    
+    return x, iter, err
+
 #f función continua
 #g función continua
 #x0 aproximación inicial
@@ -47,6 +77,31 @@ def punto_fijo(f, g, x0, tol, Nmax):
     x = xact
     iter = cont
     err = E
+    return x, iter, err
+
+#f, funcion continua
+#f', funcion continua
+#x0, aproximacion inicial 
+#tol, tolerancia
+#Nmax, maximo de iteraciones
+def newton(f, df, x0, tol, Nmax):
+    xant = x0
+    fant = f(xant)
+    E = 1000
+    cont = 0
+    
+    while E > tol and cont < Nmax:
+        xact = xant - fant / df(xant)
+        fact = f(xact)
+        E = abs(xact - xant)
+        cont = cont + 1
+        xant = xact
+        fant = fact
+        
+    x = xact
+    iter = cont
+    err = E
+    
     return x, iter, err
 
 #f función continua
@@ -76,4 +131,31 @@ def secante(f, x0, x1, tol, Nmax):
     iter = cont
     err = E
 
+    return x, iter, err
+
+#Entradas: 
+#f, funcion continua
+#f', funcion continua
+#f'', funcion continua
+#x0, aproximacion inicial 
+#tol, tolerancia
+#Nmax, maximo de iteraciones
+def raicesmlt(f, df, d2f, x0, tol, Nmax):
+    xant = x0
+    fant = f(xant)
+    E = 1000 
+    cont = 0
+    
+    while E > tol and cont < Nmax:
+        xact = xant - fant * df(xant) / ((df(xant)) ** 2 - fant * d2f(xant))
+        fact = f(xact)
+        E = abs(xact - xant)
+        cont = cont + 1
+        xant = xact
+        fant = fact
+        
+    x = xact
+    iter = cont
+    err = E
+    
     return x, iter, err
