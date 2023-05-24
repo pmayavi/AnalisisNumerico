@@ -121,6 +121,15 @@ newton_raphson_button = tk.Button(
 )
 newton_raphson_button.pack()
 
+secante_button = tk.Button(
+    main_screen,
+    text="Método de Secante",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: switch_screen(secante),
+)
+secante_button.pack()
+
 # ---- Sidebar ----
 sidebar = tk.Frame(window, bg=sidebar_bg, width=150)
 
@@ -567,6 +576,85 @@ nr5_show_button = tk.Button(
     ),
 )
 nr5_show_button.pack(pady=20)
+
+
+# ---- secante Screen ----
+secante = tk.Frame(window, bg=main_bg)
+
+s6_title_label = tk.Label(
+    secante,
+    text="Método de Secante",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+s6_title_label.pack(pady=20)
+
+s6_f = tk.Label(
+    secante,
+    text="Función:",
+    font=(font, size),
+    bg=main_bg,
+)
+s6_f.pack(pady=10)
+s6_f_entry = tk.Entry(secante, font=(font, size1))
+s6_f_entry.pack()
+
+s6_x0 = tk.Label(
+    secante,
+    text="X0:",
+    font=(font, size),
+    bg=main_bg,
+)
+s6_x0.pack(pady=10)
+s6_x0_entry = tk.Entry(secante, font=(font, size1))
+s6_x0_entry.pack()
+
+s6_x1 = tk.Label(
+    secante,
+    text="X1:",
+    font=(font, size),
+    bg=main_bg,
+)
+s6_x1.pack(pady=10)
+s6_x1_entry = tk.Entry(secante, font=(font, size1))
+s6_x1_entry.pack()
+
+s6_tol = tk.Label(
+    secante,
+    text="Tolerancia:",
+    font=(font, size),
+    bg=main_bg,
+)
+s6_tol.pack(pady=10)
+s6_tol_entry = tk.Entry(secante, font=(font, size1))
+s6_tol_entry.pack()
+
+s6_n = tk.Label(
+    secante,
+    text="Iteraciones:",
+    font=(font, size),
+    bg=main_bg,
+)
+s6_n.pack(pady=10)
+s6_n_entry = tk.Entry(secante, font=(font, size1))
+s6_n_entry.pack()
+
+s6_show_button = tk.Button(
+    secante,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.secante(
+            s6_x0_entry.get(),
+            s6_x1_entry.get(),
+            s6_f_entry.get(),
+            s6_tol_entry.get(),
+            s6_n_entry.get(),
+        )
+    ),
+)
+s6_show_button.pack(pady=20)
 
 
 # Initially show the input screen
