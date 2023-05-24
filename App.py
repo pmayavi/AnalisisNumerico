@@ -130,6 +130,15 @@ secante_button = tk.Button(
 )
 secante_button.pack()
 
+multiple_roots_button = tk.Button(
+    main_screen,
+    text="Método de Raices multiples",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: switch_screen(multiple_roots),
+)
+multiple_roots_button.pack()
+
 # ---- Sidebar ----
 sidebar = tk.Frame(window, bg=sidebar_bg, width=150)
 
@@ -655,6 +664,96 @@ s6_show_button = tk.Button(
     ),
 )
 s6_show_button.pack(pady=20)
+
+
+# ---- multiple_roots Screen ----
+multiple_roots = tk.Frame(window, bg=main_bg)
+
+mr7_title_label = tk.Label(
+    multiple_roots,
+    text="Método de Reices multiples",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+mr7_title_label.pack(pady=20)
+
+mr7_x0 = tk.Label(
+    multiple_roots,
+    text="X0:",
+    font=(font, size),
+    bg=main_bg,
+)
+mr7_x0.pack(pady=10)
+mr7_x0_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr7_x0_entry.pack()
+
+mr7_f = tk.Label(
+    multiple_roots,
+    text="Función:",
+    font=(font, size),
+    bg=main_bg,
+)
+mr7_f.pack(pady=10)
+mr7_f_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr7_f_entry.pack()
+
+mr7_df = tk.Label(
+    multiple_roots,
+    text="df:",
+    font=(font, size),
+    bg=main_bg,
+)
+mr7_df.pack(pady=10)
+mr7_df_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr7_df_entry.pack()
+
+mr7_df2 = tk.Label(
+    multiple_roots,
+    text="df2:",
+    font=(font, size),
+    bg=main_bg,
+)
+mr7_df2.pack(pady=10)
+mr7_df2_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr7_df2_entry.pack()
+
+mr7_tol = tk.Label(
+    multiple_roots,
+    text="Tolerancia:",
+    font=(font, size),
+    bg=main_bg,
+)
+mr7_tol.pack(pady=10)
+mr7_tol_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr7_tol_entry.pack()
+
+mr7_n = tk.Label(
+    multiple_roots,
+    text="Iteraciones:",
+    font=(font, size),
+    bg=main_bg,
+)
+mr7_n.pack(pady=10)
+mr7_n_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr7_n_entry.pack()
+
+mr7_show_button = tk.Button(
+    multiple_roots,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.multiple_roots(
+            mr7_x0_entry.get(),
+            mr7_f_entry.get(),
+            mr7_df_entry.get(),
+            mr7_df2_entry.get(),
+            mr7_tol_entry.get(),
+            mr7_n_entry.get(),
+        )
+    ),
+)
+mr7_show_button.pack(pady=20)
 
 
 # Initially show the input screen
