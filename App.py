@@ -112,6 +112,15 @@ punto_fijo_button = tk.Button(
 )
 punto_fijo_button.pack()
 
+newton_raphson_button = tk.Button(
+    main_screen,
+    text="Método de Newton-Raphson",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: switch_screen(newton_raphson),
+)
+newton_raphson_button.pack()
+
 # ---- Sidebar ----
 sidebar = tk.Frame(window, bg=sidebar_bg, width=150)
 
@@ -480,6 +489,84 @@ pf4_show_button = tk.Button(
     ),
 )
 pf4_show_button.pack(pady=20)
+
+# ---- newton_raphson Screen ----
+newton_raphson = tk.Frame(window, bg=main_bg)
+
+nr5_title_label = tk.Label(
+    newton_raphson,
+    text="Método de Newton-Raphson",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+nr5_title_label.pack(pady=20)
+
+nr5_f = tk.Label(
+    newton_raphson,
+    text="Función F:",
+    font=(font, size),
+    bg=main_bg,
+)
+nr5_f.pack(pady=10)
+nr5_f_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr5_f_entry.pack()
+
+nr5_df = tk.Label(
+    newton_raphson,
+    text="df:",
+    font=(font, size),
+    bg=main_bg,
+)
+nr5_df.pack(pady=10)
+nr5_df_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr5_df_entry.pack()
+
+nr5_x0 = tk.Label(
+    newton_raphson,
+    text="X Inicial:",
+    font=(font, size),
+    bg=main_bg,
+)
+nr5_x0.pack(pady=10)
+nr5_x0_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr5_x0_entry.pack()
+
+nr5_tol = tk.Label(
+    newton_raphson,
+    text="Tolerancia:",
+    font=(font, size),
+    bg=main_bg,
+)
+nr5_tol.pack(pady=10)
+nr5_tol_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr5_tol_entry.pack()
+
+nr5_n = tk.Label(
+    newton_raphson,
+    text="Iteraciones:",
+    font=(font, size),
+    bg=main_bg,
+)
+nr5_n.pack(pady=10)
+nr5_n_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr5_n_entry.pack()
+
+nr5_show_button = tk.Button(
+    newton_raphson,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.newton_raphson(
+            nr5_f_entry.get(),
+            nr5_df_entry.get(),
+            nr5_x0_entry.get(),
+            nr5_tol_entry.get(),
+            nr5_n_entry.get(),
+        )
+    ),
+)
+nr5_show_button.pack(pady=20)
 
 
 # Initially show the input screen
