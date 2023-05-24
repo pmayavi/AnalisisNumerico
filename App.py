@@ -5,6 +5,8 @@ import metodos as methods
 # Style variables
 font = "Arial"
 size = 16
+size1 = 14
+size2 = 20
 main_bg = "#%02x%02x%02x" % (255, 255, 151)
 button_bg = "#%02x%02x%02x" % (int(255 * 0.9), int(255 * 0.9), int(151 * 0.9))
 sidebar_bg = "#%02x%02x%02x" % (255, 179, 71)
@@ -69,7 +71,7 @@ current_screen = main_screen
 title_label = tk.Label(
     main_screen,
     text="Métodos de Análisis Numérico",
-    font=(font, 20, "bold"),
+    font=(font, size2, "bold"),
     bg=main_bg,
 )
 title_label.pack(pady=20)
@@ -77,7 +79,7 @@ title_label.pack(pady=20)
 incremental_search_button = tk.Button(
     main_screen,
     text="Método de Búsqueda Incremental",
-    font=(font, 14),
+    font=(font, size1),
     bg=button_bg,
     command=lambda: switch_screen(incremental_search),
 )
@@ -86,7 +88,7 @@ incremental_search_button.pack()
 bisection_button = tk.Button(
     main_screen,
     text="Método de Bisección",
-    font=(font, 14),
+    font=(font, size1),
     bg=button_bg,
     command=lambda: switch_screen(bisection),
 )
@@ -95,11 +97,20 @@ bisection_button.pack()
 regla_falsa_button = tk.Button(
     main_screen,
     text="Método de la Regla Falsa",
-    font=(font, 14),
+    font=(font, size1),
     bg=button_bg,
     command=lambda: switch_screen(regla_falsa),
 )
 regla_falsa_button.pack()
+
+punto_fijo_button = tk.Button(
+    main_screen,
+    text="Método del Punto fijo",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: switch_screen(punto_fijo),
+)
+punto_fijo_button.pack()
 
 # ---- Sidebar ----
 sidebar = tk.Frame(window, bg=sidebar_bg, width=150)
@@ -146,13 +157,13 @@ name_label_output = tk.Label(
     bg=main_bg,
 )
 name_label_output.pack(pady=20)
-name_entry = tk.Entry(matrix_screen, font=(font, 14))
+name_entry = tk.Entry(matrix_screen, font=(font, size1))
 name_entry.pack()
 
 next_button = tk.Button(
     matrix_screen,
     text="Continuar",
-    font=(font, 14),
+    font=(font, size1),
     bg=button_bg,
     command=save_matrix,
 )
@@ -164,7 +175,7 @@ incremental_search = tk.Frame(window, bg=main_bg)
 is1_title_label = tk.Label(
     incremental_search,
     text="Método de Búsqueda Incremental",
-    font=(font, 20, "bold"),
+    font=(font, size2, "bold"),
     bg=main_bg,
 )
 is1_title_label.pack(pady=20)
@@ -176,7 +187,7 @@ is1_f = tk.Label(
     bg=main_bg,
 )
 is1_f.pack(pady=10)
-is1_f_entry = tk.Entry(incremental_search, font=(font, 14))
+is1_f_entry = tk.Entry(incremental_search, font=(font, size1))
 is1_f_entry.pack()
 
 is1_xinit = tk.Label(
@@ -186,7 +197,7 @@ is1_xinit = tk.Label(
     bg=main_bg,
 )
 is1_xinit.pack(pady=10)
-is1_xinit_entry = tk.Entry(incremental_search, font=(font, 14))
+is1_xinit_entry = tk.Entry(incremental_search, font=(font, size1))
 is1_xinit_entry.pack()
 
 is1_dx = tk.Label(
@@ -196,7 +207,7 @@ is1_dx = tk.Label(
     bg=main_bg,
 )
 is1_dx.pack(pady=10)
-is1_dx_entry = tk.Entry(incremental_search, font=(font, 14))
+is1_dx_entry = tk.Entry(incremental_search, font=(font, size1))
 is1_dx_entry.pack()
 
 is1_n = tk.Label(
@@ -206,13 +217,13 @@ is1_n = tk.Label(
     bg=main_bg,
 )
 is1_n.pack(pady=10)
-is1_n_entry = tk.Entry(incremental_search, font=(font, 14))
+is1_n_entry = tk.Entry(incremental_search, font=(font, size1))
 is1_n_entry.pack()
 
 is1_show_button = tk.Button(
     incremental_search,
     text="Resolver",
-    font=(font, 14),
+    font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.incremental_search(
@@ -231,7 +242,7 @@ bisection = tk.Frame(window, bg=main_bg)
 b2_title_label = tk.Label(
     bisection,
     text="Método de Bisección",
-    font=(font, 20, "bold"),
+    font=(font, size2, "bold"),
     bg=main_bg,
 )
 b2_title_label.pack(pady=20)
@@ -243,7 +254,7 @@ b2_f = tk.Label(
     bg=main_bg,
 )
 b2_f.pack(pady=10)
-b2_f_entry = tk.Entry(bisection, font=(font, 14))
+b2_f_entry = tk.Entry(bisection, font=(font, size1))
 b2_f_entry.pack()
 
 b2_xi = tk.Label(
@@ -253,7 +264,7 @@ b2_xi = tk.Label(
     bg=main_bg,
 )
 b2_xi.pack(pady=10)
-b2_xi_entry = tk.Entry(bisection, font=(font, 14))
+b2_xi_entry = tk.Entry(bisection, font=(font, size1))
 b2_xi_entry.pack()
 
 b2_xs = tk.Label(
@@ -263,7 +274,7 @@ b2_xs = tk.Label(
     bg=main_bg,
 )
 b2_xs.pack(pady=10)
-b2_xs_entry = tk.Entry(bisection, font=(font, 14))
+b2_xs_entry = tk.Entry(bisection, font=(font, size1))
 b2_xs_entry.pack()
 
 b2_tol = tk.Label(
@@ -273,7 +284,7 @@ b2_tol = tk.Label(
     bg=main_bg,
 )
 b2_tol.pack(pady=10)
-b2_tol_entry = tk.Entry(bisection, font=(font, 14))
+b2_tol_entry = tk.Entry(bisection, font=(font, size1))
 b2_tol_entry.pack()
 
 b2_n = tk.Label(
@@ -283,13 +294,13 @@ b2_n = tk.Label(
     bg=main_bg,
 )
 b2_n.pack(pady=10)
-b2_n_entry = tk.Entry(bisection, font=(font, 14))
+b2_n_entry = tk.Entry(bisection, font=(font, size1))
 b2_n_entry.pack()
 
 b2_show_button = tk.Button(
     bisection,
     text="Resolver",
-    font=(font, 14),
+    font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.biseccion(
@@ -309,7 +320,7 @@ regla_falsa = tk.Frame(window, bg=main_bg)
 rf3_title_label = tk.Label(
     regla_falsa,
     text="Método de la Regla Falsa",
-    font=(font, 20, "bold"),
+    font=(font, size2, "bold"),
     bg=main_bg,
 )
 rf3_title_label.pack(pady=20)
@@ -321,7 +332,7 @@ rf3_f = tk.Label(
     bg=main_bg,
 )
 rf3_f.pack(pady=10)
-rf3_f_entry = tk.Entry(regla_falsa, font=(font, 14))
+rf3_f_entry = tk.Entry(regla_falsa, font=(font, size1))
 rf3_f_entry.pack()
 
 rf3_terror = tk.Label(
@@ -331,7 +342,7 @@ rf3_terror = tk.Label(
     bg=main_bg,
 )
 rf3_terror.pack(pady=10)
-rf3_terror_entry = tk.Entry(regla_falsa, font=(font, 14))
+rf3_terror_entry = tk.Entry(regla_falsa, font=(font, size1))
 rf3_terror_entry.pack()
 
 rf3_xi = tk.Label(
@@ -341,7 +352,7 @@ rf3_xi = tk.Label(
     bg=main_bg,
 )
 rf3_xi.pack(pady=10)
-rf3_xi_entry = tk.Entry(regla_falsa, font=(font, 14))
+rf3_xi_entry = tk.Entry(regla_falsa, font=(font, size1))
 rf3_xi_entry.pack()
 
 rf3_xs = tk.Label(
@@ -351,7 +362,7 @@ rf3_xs = tk.Label(
     bg=main_bg,
 )
 rf3_xs.pack(pady=10)
-rf3_xs_entry = tk.Entry(regla_falsa, font=(font, 14))
+rf3_xs_entry = tk.Entry(regla_falsa, font=(font, size1))
 rf3_xs_entry.pack()
 
 rf3_tol = tk.Label(
@@ -361,7 +372,7 @@ rf3_tol = tk.Label(
     bg=main_bg,
 )
 rf3_tol.pack(pady=10)
-rf3_tol_entry = tk.Entry(regla_falsa, font=(font, 14))
+rf3_tol_entry = tk.Entry(regla_falsa, font=(font, size1))
 rf3_tol_entry.pack()
 
 rf3_n = tk.Label(
@@ -371,16 +382,16 @@ rf3_n = tk.Label(
     bg=main_bg,
 )
 rf3_n.pack(pady=10)
-rf3_n_entry = tk.Entry(regla_falsa, font=(font, 14))
+rf3_n_entry = tk.Entry(regla_falsa, font=(font, size1))
 rf3_n_entry.pack()
 
 rf3_show_button = tk.Button(
     regla_falsa,
     text="Resolver",
-    font=(font, 14),
+    font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.biseccion(
+        methods.regla_falsa(
             rf3_f_entry.get(),
             rf3_terror_entry.get(),
             rf3_xi_entry.get(),
@@ -391,6 +402,84 @@ rf3_show_button = tk.Button(
     ),
 )
 rf3_show_button.pack(pady=20)
+
+# ---- Punto fijo Screen ----
+punto_fijo = tk.Frame(window, bg=main_bg)
+
+pf4_title_label = tk.Label(
+    punto_fijo,
+    text="Método del Punto fijo",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+pf4_title_label.pack(pady=20)
+
+pf4_f = tk.Label(
+    punto_fijo,
+    text="Función F:",
+    font=(font, size),
+    bg=main_bg,
+)
+pf4_f.pack(pady=10)
+pf4_f_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf4_f_entry.pack()
+
+pf4_g = tk.Label(
+    punto_fijo,
+    text="Función G:",
+    font=(font, size),
+    bg=main_bg,
+)
+pf4_g.pack(pady=10)
+pf4_g_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf4_g_entry.pack()
+
+pf4_x0 = tk.Label(
+    punto_fijo,
+    text="X Inicial:",
+    font=(font, size),
+    bg=main_bg,
+)
+pf4_x0.pack(pady=10)
+pf4_x0_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf4_x0_entry.pack()
+
+pf4_tol = tk.Label(
+    punto_fijo,
+    text="Tolerancia:",
+    font=(font, size),
+    bg=main_bg,
+)
+pf4_tol.pack(pady=10)
+pf4_tol_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf4_tol_entry.pack()
+
+pf4_n = tk.Label(
+    punto_fijo,
+    text="Iteraciones:",
+    font=(font, size),
+    bg=main_bg,
+)
+pf4_n.pack(pady=10)
+pf4_n_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf4_n_entry.pack()
+
+pf4_show_button = tk.Button(
+    punto_fijo,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.punto_fijo(
+            pf4_f_entry.get(),
+            pf4_g_entry.get(),
+            pf4_x0_entry.get(),
+            pf4_tol_entry.get(),
+            pf4_n_entry.get(),
+        )
+    ),
+)
+pf4_show_button.pack(pady=20)
 
 
 # Initially show the input screen
