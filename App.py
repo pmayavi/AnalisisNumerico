@@ -23,26 +23,9 @@ def switch_screen(screen):
     current_screen.pack()
 
 
-def get_matrix(screen):
-    # Hide the current screen
-    main_screen.pack_forget()
-
-    # Show the selected screen
-    global current_screen
-    current_screen = screen
-    current_screen.pack()
-
-
-def save_matrix():
-    # Hide the current screen
-    matrix_screen.pack_forget()
-
-    # Show the selected screen
-    global current_screen
-    current_screen.pack()
-
-
 def show_result(res):
+    matrix_screen1.pack_forget()
+    matrix_screen2.pack_forget()
     result_label.config(text=str(res))
     result_screen.pack()
 
@@ -67,6 +50,7 @@ window.geometry("800x500")
 # ---- Main Screen ----
 main_screen = tk.Frame(window, bg=main_bg)
 current_screen = main_screen
+
 
 title_label = tk.Label(
     main_screen,
@@ -139,6 +123,15 @@ multiple_roots_button = tk.Button(
 )
 multiple_roots_button.pack()
 
+simple_gauss_button = tk.Button(
+    main_screen,
+    text="Método de Gauss simple",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(simple_gauss),
+)
+simple_gauss_button.pack()
+
 # ---- Sidebar ----
 sidebar = tk.Frame(window, bg=sidebar_bg, width=150)
 
@@ -175,26 +168,70 @@ result_label = tk.Label(
 result_label.pack(pady=20)
 
 # ---- Matrix Screen ----
-matrix_screen = tk.Frame(window, bg=main_bg)
+matrix_entries = []
+b_entries = []
 
-name_label_output = tk.Label(
-    matrix_screen,
-    text="Tamaño de la matriz:",
-    font=(font, size),
-    bg=main_bg,
-)
-name_label_output.pack(pady=20)
-name_entry = tk.Entry(matrix_screen, font=(font, size1))
-name_entry.pack()
 
-next_button = tk.Button(
-    matrix_screen,
-    text="Continuar",
-    font=(font, size1),
-    bg=button_bg,
-    command=save_matrix,
-)
-next_button.pack(pady=20)
+def save_matrix():
+    matrix_screen1.pack_forget()
+    global current_screen
+    current_screen.pack()
+
+
+def create_matrix(n):
+    global matrix_screen1, matrix_screen2, matrix_entries, b_entries, sg8_button
+    sg8_button.pack_forget()
+    for widget in matrix_screen2.winfo_children():
+        widget.grid_forget()
+    matrix_entries = []
+    b_entries = []
+    for row in range(n):
+        entry_row = []
+        for col in range(n):
+            entry = tk.Entry(matrix_screen2, width=10)
+            entry.grid(row=row, column=col, padx=5, pady=5)
+            entry_row.append(entry)
+        matrix_entries.append(entry_row)
+        entry = tk.Entry(matrix_screen2, width=10)
+        entry.grid(row=row, column=n, padx=60, pady=5)
+        b_entries.append(entry)
+    matrix_screen2.pack()
+    sg8_button.pack(pady=20)
+
+
+def get_matrix(screen):
+    global matrix_screen1, matrix_screen2, current_screen
+    matrix_screen1 = tk.Frame(screen, bg=main_bg)
+
+    matrix1_label = tk.Label(
+        matrix_screen1,
+        text="Tamaño de la matriz:",
+        font=(font, size),
+        bg=main_bg,
+    )
+    matrix1_label.pack(pady=20)
+    matrix1_entry = tk.Entry(matrix_screen1, font=(font, size1))
+    matrix1_entry.pack()
+
+    matrix1_button = tk.Button(
+        matrix_screen1,
+        text="Continuar",
+        font=(font, size1),
+        bg=button_bg,
+        command=lambda: create_matrix(int(matrix1_entry.get())),
+    )
+    matrix1_button.pack(pady=20)
+
+    matrix_screen2 = tk.Frame(screen, bg=main_bg)
+
+    main_screen.pack_forget()
+    screen.pack()
+
+    # Show the selected screen
+    current_screen = screen
+    screen.pack()
+    matrix_screen1.pack()
+
 
 # ---- Incremental Search Screen ----
 incremental_search = tk.Frame(window, bg=main_bg)
@@ -755,6 +792,25 @@ mr7_show_button = tk.Button(
 )
 mr7_show_button.pack(pady=20)
 
+
+# ---- simple_gauss Screen ----
+simple_gauss = tk.Frame(window, bg=main_bg)
+
+sg8_title_label = tk.Label(
+    simple_gauss,
+    text="Método de Gauss simple",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+sg8_title_label.pack(pady=20)
+
+sg8_button = tk.Button(
+    simple_gauss,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.simple_gauss(matrix_entries, b_entries)),
+)
 
 # Initially show the input screen
 main_screen.pack()
