@@ -128,9 +128,36 @@ simple_gauss_button = tk.Button(
     text="Método de Gauss simple",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: get_matrix(simple_gauss),
+    command=lambda: get_matrix(simple_gauss, sg8_button),
 )
 simple_gauss_button.pack()
+
+to_aug_button = tk.Button(
+    main_screen,
+    text="Método de to_aug",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(to_aug, ta9_button),
+)
+to_aug_button.pack()
+
+gauss_partial_pivot_button = tk.Button(
+    main_screen,
+    text="Método de Gauss de pivote parcial",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(gauss_partial_pivot, gpp12_button),
+)
+gauss_partial_pivot_button.pack()
+
+gauss_total_pivot_button = tk.Button(
+    main_screen,
+    text="Método de Gauss de pivote total",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(gauss_total_pivot, gtp13_button),
+)
+gauss_total_pivot_button.pack()
 
 # ---- Sidebar ----
 sidebar = tk.Frame(window, bg=sidebar_bg, width=150)
@@ -178,9 +205,9 @@ def save_matrix():
     current_screen.pack()
 
 
-def create_matrix(n):
-    global matrix_screen1, matrix_screen2, matrix_entries, b_entries, sg8_button
-    sg8_button.pack_forget()
+def create_matrix(n, button):
+    global matrix_screen1, matrix_screen2, matrix_entries, b_entries
+    button.pack_forget()
     for widget in matrix_screen2.winfo_children():
         widget.grid_forget()
     matrix_entries = []
@@ -196,10 +223,10 @@ def create_matrix(n):
         entry.grid(row=row, column=n, padx=60, pady=5)
         b_entries.append(entry)
     matrix_screen2.pack()
-    sg8_button.pack(pady=20)
+    button.pack(pady=20)
 
 
-def get_matrix(screen):
+def get_matrix(screen, button):
     global matrix_screen1, matrix_screen2, current_screen
     matrix_screen1 = tk.Frame(screen, bg=main_bg)
 
@@ -218,7 +245,7 @@ def get_matrix(screen):
         text="Continuar",
         font=(font, size1),
         bg=button_bg,
-        command=lambda: create_matrix(int(matrix1_entry.get())),
+        command=lambda: create_matrix(int(matrix1_entry.get()), button),
     )
     matrix1_button.pack(pady=20)
 
@@ -810,6 +837,63 @@ sg8_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(methods.simple_gauss(matrix_entries, b_entries)),
+)
+
+# ---- to_aug Screen ----
+to_aug = tk.Frame(window, bg=main_bg)
+
+ta9_title_label = tk.Label(
+    to_aug,
+    text="Método de to_aug",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+ta9_title_label.pack(pady=20)
+
+ta9_button = tk.Button(
+    to_aug,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.to_aug(matrix_entries, b_entries)),
+)
+
+# ---- gauss_partial_pivot Screen ----
+gauss_partial_pivot = tk.Frame(window, bg=main_bg)
+
+gpp12_title_label = tk.Label(
+    gauss_partial_pivot,
+    text="Método de Gauss de pivote parcial",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+gpp12_title_label.pack(pady=20)
+
+gpp12_button = tk.Button(
+    gauss_partial_pivot,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.gauss_partial_pivot(matrix_entries, b_entries)),
+)
+
+# ---- gauss_total_pivot Screen ----
+gauss_total_pivot = tk.Frame(window, bg=main_bg)
+
+gtp13_title_label = tk.Label(
+    gauss_total_pivot,
+    text="Método de Gauss de pivote total",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+gtp13_title_label.pack(pady=20)
+
+gtp13_button = tk.Button(
+    gauss_total_pivot,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.gauss_total_pivot(matrix_entries, b_entries)),
 )
 
 # Initially show the input screen
