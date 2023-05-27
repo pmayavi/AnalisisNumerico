@@ -128,7 +128,7 @@ simple_gauss_button = tk.Button(
     text="Método de Gauss simple",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: get_matrix(simple_gauss, sg8_button),
+    command=lambda: get_matrix(simple_gauss, sg_button),
 )
 simple_gauss_button.pack()
 
@@ -137,7 +137,7 @@ to_aug_button = tk.Button(
     text="Método de to_aug",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: get_matrix(to_aug, ta9_button),
+    command=lambda: get_matrix(to_aug, ta_button),
 )
 to_aug_button.pack()
 
@@ -146,7 +146,7 @@ gauss_partial_pivot_button = tk.Button(
     text="Método de Gauss de pivote parcial",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: get_matrix(gauss_partial_pivot, gpp12_button),
+    command=lambda: get_matrix(gauss_partial_pivot, gpp_button),
 )
 gauss_partial_pivot_button.pack()
 
@@ -155,7 +155,7 @@ gauss_total_pivot_button = tk.Button(
     text="Método de Gauss de pivote total",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: get_matrix(gauss_total_pivot, gtp13_button),
+    command=lambda: get_matrix(gauss_total_pivot, gtp_button),
 )
 gauss_total_pivot_button.pack()
 
@@ -263,575 +263,575 @@ def get_matrix(screen, button):
 # ---- Incremental Search Screen ----
 incremental_search = tk.Frame(window, bg=main_bg)
 
-is1_title_label = tk.Label(
+is_title_label = tk.Label(
     incremental_search,
     text="Método de Búsqueda Incremental",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-is1_title_label.pack(pady=20)
+is_title_label.pack(pady=20)
 
-is1_f = tk.Label(
+is_f = tk.Label(
     incremental_search,
     text="Función:",
     font=(font, size),
     bg=main_bg,
 )
-is1_f.pack(pady=10)
-is1_f_entry = tk.Entry(incremental_search, font=(font, size1))
-is1_f_entry.pack()
+is_f.pack(pady=10)
+is_f_entry = tk.Entry(incremental_search, font=(font, size1))
+is_f_entry.pack()
 
-is1_xinit = tk.Label(
+is_xinit = tk.Label(
     incremental_search,
     text="X inicial:",
     font=(font, size),
     bg=main_bg,
 )
-is1_xinit.pack(pady=10)
-is1_xinit_entry = tk.Entry(incremental_search, font=(font, size1))
-is1_xinit_entry.pack()
+is_xinit.pack(pady=10)
+is_xinit_entry = tk.Entry(incremental_search, font=(font, size1))
+is_xinit_entry.pack()
 
-is1_dx = tk.Label(
+is_dx = tk.Label(
     incremental_search,
     text="Derivada:",
     font=(font, size),
     bg=main_bg,
 )
-is1_dx.pack(pady=10)
-is1_dx_entry = tk.Entry(incremental_search, font=(font, size1))
-is1_dx_entry.pack()
+is_dx.pack(pady=10)
+is_dx_entry = tk.Entry(incremental_search, font=(font, size1))
+is_dx_entry.pack()
 
-is1_n = tk.Label(
+is_n = tk.Label(
     incremental_search,
     text="Iteraciones:",
     font=(font, size),
     bg=main_bg,
 )
-is1_n.pack(pady=10)
-is1_n_entry = tk.Entry(incremental_search, font=(font, size1))
-is1_n_entry.pack()
+is_n.pack(pady=10)
+is_n_entry = tk.Entry(incremental_search, font=(font, size1))
+is_n_entry.pack()
 
-is1_show_button = tk.Button(
+is_show_button = tk.Button(
     incremental_search,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.incremental_search(
-            is1_f_entry.get(),
-            is1_xinit_entry.get(),
-            is1_dx_entry.get(),
-            is1_n_entry.get(),
+            is_f_entry.get(),
+            is_xinit_entry.get(),
+            is_dx_entry.get(),
+            is_n_entry.get(),
         )
     ),
 )
-is1_show_button.pack(pady=20)
+is_show_button.pack(pady=20)
 
 # ---- Bisection Screen ----
 bisection = tk.Frame(window, bg=main_bg)
 
-b2_title_label = tk.Label(
+b_title_label = tk.Label(
     bisection,
     text="Método de Bisección",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-b2_title_label.pack(pady=20)
+b_title_label.pack(pady=20)
 
-b2_f = tk.Label(
+b_f = tk.Label(
     bisection,
     text="Función:",
     font=(font, size),
     bg=main_bg,
 )
-b2_f.pack(pady=10)
-b2_f_entry = tk.Entry(bisection, font=(font, size1))
-b2_f_entry.pack()
+b_f.pack(pady=10)
+b_f_entry = tk.Entry(bisection, font=(font, size1))
+b_f_entry.pack()
 
-b2_xi = tk.Label(
+b_xi = tk.Label(
     bisection,
     text="X Inferior:",
     font=(font, size),
     bg=main_bg,
 )
-b2_xi.pack(pady=10)
-b2_xi_entry = tk.Entry(bisection, font=(font, size1))
-b2_xi_entry.pack()
+b_xi.pack(pady=10)
+b_xi_entry = tk.Entry(bisection, font=(font, size1))
+b_xi_entry.pack()
 
-b2_xs = tk.Label(
+b_xs = tk.Label(
     bisection,
     text="X Superior:",
     font=(font, size),
     bg=main_bg,
 )
-b2_xs.pack(pady=10)
-b2_xs_entry = tk.Entry(bisection, font=(font, size1))
-b2_xs_entry.pack()
+b_xs.pack(pady=10)
+b_xs_entry = tk.Entry(bisection, font=(font, size1))
+b_xs_entry.pack()
 
-b2_tol = tk.Label(
+b_tol = tk.Label(
     bisection,
     text="Tolerancia:",
     font=(font, size),
     bg=main_bg,
 )
-b2_tol.pack(pady=10)
-b2_tol_entry = tk.Entry(bisection, font=(font, size1))
-b2_tol_entry.pack()
+b_tol.pack(pady=10)
+b_tol_entry = tk.Entry(bisection, font=(font, size1))
+b_tol_entry.pack()
 
-b2_n = tk.Label(
+b_n = tk.Label(
     bisection,
     text="Iteraciones:",
     font=(font, size),
     bg=main_bg,
 )
-b2_n.pack(pady=10)
-b2_n_entry = tk.Entry(bisection, font=(font, size1))
-b2_n_entry.pack()
+b_n.pack(pady=10)
+b_n_entry = tk.Entry(bisection, font=(font, size1))
+b_n_entry.pack()
 
-b2_show_button = tk.Button(
+b_show_button = tk.Button(
     bisection,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.biseccion(
-            b2_f_entry.get(),
-            b2_xi_entry.get(),
-            b2_xs_entry.get(),
-            b2_tol_entry.get(),
-            b2_n_entry.get(),
+            b_f_entry.get(),
+            b_xi_entry.get(),
+            b_xs_entry.get(),
+            b_tol_entry.get(),
+            b_n_entry.get(),
         )
     ),
 )
-b2_show_button.pack(pady=20)
+b_show_button.pack(pady=20)
 
 # ---- regla_falsa Screen ----
 regla_falsa = tk.Frame(window, bg=main_bg)
 
-rf3_title_label = tk.Label(
+rf_title_label = tk.Label(
     regla_falsa,
     text="Método de la Regla Falsa",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-rf3_title_label.pack(pady=20)
+rf_title_label.pack(pady=20)
 
-rf3_f = tk.Label(
+rf_f = tk.Label(
     regla_falsa,
     text="Función:",
     font=(font, size),
     bg=main_bg,
 )
-rf3_f.pack(pady=10)
-rf3_f_entry = tk.Entry(regla_falsa, font=(font, size1))
-rf3_f_entry.pack()
+rf_f.pack(pady=10)
+rf_f_entry = tk.Entry(regla_falsa, font=(font, size1))
+rf_f_entry.pack()
 
-rf3_terror = tk.Label(
+rf_terror = tk.Label(
     regla_falsa,
     text="t error:",
     font=(font, size),
     bg=main_bg,
 )
-rf3_terror.pack(pady=10)
-rf3_terror_entry = tk.Entry(regla_falsa, font=(font, size1))
-rf3_terror_entry.pack()
+rf_terror.pack(pady=10)
+rf_terror_entry = tk.Entry(regla_falsa, font=(font, size1))
+rf_terror_entry.pack()
 
-rf3_xi = tk.Label(
+rf_xi = tk.Label(
     regla_falsa,
     text="X Inferior:",
     font=(font, size),
     bg=main_bg,
 )
-rf3_xi.pack(pady=10)
-rf3_xi_entry = tk.Entry(regla_falsa, font=(font, size1))
-rf3_xi_entry.pack()
+rf_xi.pack(pady=10)
+rf_xi_entry = tk.Entry(regla_falsa, font=(font, size1))
+rf_xi_entry.pack()
 
-rf3_xs = tk.Label(
+rf_xs = tk.Label(
     regla_falsa,
     text="X Superior:",
     font=(font, size),
     bg=main_bg,
 )
-rf3_xs.pack(pady=10)
-rf3_xs_entry = tk.Entry(regla_falsa, font=(font, size1))
-rf3_xs_entry.pack()
+rf_xs.pack(pady=10)
+rf_xs_entry = tk.Entry(regla_falsa, font=(font, size1))
+rf_xs_entry.pack()
 
-rf3_tol = tk.Label(
+rf_tol = tk.Label(
     regla_falsa,
     text="Tolerancia:",
     font=(font, size),
     bg=main_bg,
 )
-rf3_tol.pack(pady=10)
-rf3_tol_entry = tk.Entry(regla_falsa, font=(font, size1))
-rf3_tol_entry.pack()
+rf_tol.pack(pady=10)
+rf_tol_entry = tk.Entry(regla_falsa, font=(font, size1))
+rf_tol_entry.pack()
 
-rf3_n = tk.Label(
+rf_n = tk.Label(
     regla_falsa,
     text="Iteraciones:",
     font=(font, size),
     bg=main_bg,
 )
-rf3_n.pack(pady=10)
-rf3_n_entry = tk.Entry(regla_falsa, font=(font, size1))
-rf3_n_entry.pack()
+rf_n.pack(pady=10)
+rf_n_entry = tk.Entry(regla_falsa, font=(font, size1))
+rf_n_entry.pack()
 
-rf3_show_button = tk.Button(
+rf_show_button = tk.Button(
     regla_falsa,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.regla_falsa(
-            rf3_f_entry.get(),
-            rf3_terror_entry.get(),
-            rf3_xi_entry.get(),
-            rf3_xs_entry.get(),
-            rf3_tol_entry.get(),
-            rf3_n_entry.get(),
+            rf_f_entry.get(),
+            rf_terror_entry.get(),
+            rf_xi_entry.get(),
+            rf_xs_entry.get(),
+            rf_tol_entry.get(),
+            rf_n_entry.get(),
         )
     ),
 )
-rf3_show_button.pack(pady=20)
+rf_show_button.pack(pady=20)
 
 # ---- Punto fijo Screen ----
 punto_fijo = tk.Frame(window, bg=main_bg)
 
-pf4_title_label = tk.Label(
+pf_title_label = tk.Label(
     punto_fijo,
     text="Método del Punto fijo",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-pf4_title_label.pack(pady=20)
+pf_title_label.pack(pady=20)
 
-pf4_f = tk.Label(
+pf_f = tk.Label(
     punto_fijo,
     text="Función F:",
     font=(font, size),
     bg=main_bg,
 )
-pf4_f.pack(pady=10)
-pf4_f_entry = tk.Entry(punto_fijo, font=(font, size1))
-pf4_f_entry.pack()
+pf_f.pack(pady=10)
+pf_f_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf_f_entry.pack()
 
-pf4_g = tk.Label(
+pf_g = tk.Label(
     punto_fijo,
     text="Función G:",
     font=(font, size),
     bg=main_bg,
 )
-pf4_g.pack(pady=10)
-pf4_g_entry = tk.Entry(punto_fijo, font=(font, size1))
-pf4_g_entry.pack()
+pf_g.pack(pady=10)
+pf_g_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf_g_entry.pack()
 
-pf4_x0 = tk.Label(
+pf_x0 = tk.Label(
     punto_fijo,
     text="X Inicial:",
     font=(font, size),
     bg=main_bg,
 )
-pf4_x0.pack(pady=10)
-pf4_x0_entry = tk.Entry(punto_fijo, font=(font, size1))
-pf4_x0_entry.pack()
+pf_x0.pack(pady=10)
+pf_x0_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf_x0_entry.pack()
 
-pf4_tol = tk.Label(
+pf_tol = tk.Label(
     punto_fijo,
     text="Tolerancia:",
     font=(font, size),
     bg=main_bg,
 )
-pf4_tol.pack(pady=10)
-pf4_tol_entry = tk.Entry(punto_fijo, font=(font, size1))
-pf4_tol_entry.pack()
+pf_tol.pack(pady=10)
+pf_tol_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf_tol_entry.pack()
 
-pf4_n = tk.Label(
+pf_n = tk.Label(
     punto_fijo,
     text="Iteraciones:",
     font=(font, size),
     bg=main_bg,
 )
-pf4_n.pack(pady=10)
-pf4_n_entry = tk.Entry(punto_fijo, font=(font, size1))
-pf4_n_entry.pack()
+pf_n.pack(pady=10)
+pf_n_entry = tk.Entry(punto_fijo, font=(font, size1))
+pf_n_entry.pack()
 
-pf4_show_button = tk.Button(
+pf_show_button = tk.Button(
     punto_fijo,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.punto_fijo(
-            pf4_f_entry.get(),
-            pf4_g_entry.get(),
-            pf4_x0_entry.get(),
-            pf4_tol_entry.get(),
-            pf4_n_entry.get(),
+            pf_f_entry.get(),
+            pf_g_entry.get(),
+            pf_x0_entry.get(),
+            pf_tol_entry.get(),
+            pf_n_entry.get(),
         )
     ),
 )
-pf4_show_button.pack(pady=20)
+pf_show_button.pack(pady=20)
 
 # ---- newton_raphson Screen ----
 newton_raphson = tk.Frame(window, bg=main_bg)
 
-nr5_title_label = tk.Label(
+nr_title_label = tk.Label(
     newton_raphson,
     text="Método de Newton-Raphson",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-nr5_title_label.pack(pady=20)
+nr_title_label.pack(pady=20)
 
-nr5_f = tk.Label(
+nr_f = tk.Label(
     newton_raphson,
     text="Función F:",
     font=(font, size),
     bg=main_bg,
 )
-nr5_f.pack(pady=10)
-nr5_f_entry = tk.Entry(newton_raphson, font=(font, size1))
-nr5_f_entry.pack()
+nr_f.pack(pady=10)
+nr_f_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr_f_entry.pack()
 
-nr5_df = tk.Label(
+nr_df = tk.Label(
     newton_raphson,
     text="df:",
     font=(font, size),
     bg=main_bg,
 )
-nr5_df.pack(pady=10)
-nr5_df_entry = tk.Entry(newton_raphson, font=(font, size1))
-nr5_df_entry.pack()
+nr_df.pack(pady=10)
+nr_df_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr_df_entry.pack()
 
-nr5_x0 = tk.Label(
+nr_x0 = tk.Label(
     newton_raphson,
     text="X Inicial:",
     font=(font, size),
     bg=main_bg,
 )
-nr5_x0.pack(pady=10)
-nr5_x0_entry = tk.Entry(newton_raphson, font=(font, size1))
-nr5_x0_entry.pack()
+nr_x0.pack(pady=10)
+nr_x0_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr_x0_entry.pack()
 
-nr5_tol = tk.Label(
+nr_tol = tk.Label(
     newton_raphson,
     text="Tolerancia:",
     font=(font, size),
     bg=main_bg,
 )
-nr5_tol.pack(pady=10)
-nr5_tol_entry = tk.Entry(newton_raphson, font=(font, size1))
-nr5_tol_entry.pack()
+nr_tol.pack(pady=10)
+nr_tol_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr_tol_entry.pack()
 
-nr5_n = tk.Label(
+nr_n = tk.Label(
     newton_raphson,
     text="Iteraciones:",
     font=(font, size),
     bg=main_bg,
 )
-nr5_n.pack(pady=10)
-nr5_n_entry = tk.Entry(newton_raphson, font=(font, size1))
-nr5_n_entry.pack()
+nr_n.pack(pady=10)
+nr_n_entry = tk.Entry(newton_raphson, font=(font, size1))
+nr_n_entry.pack()
 
-nr5_show_button = tk.Button(
+nr_show_button = tk.Button(
     newton_raphson,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.newton_raphson(
-            nr5_f_entry.get(),
-            nr5_df_entry.get(),
-            nr5_x0_entry.get(),
-            nr5_tol_entry.get(),
-            nr5_n_entry.get(),
+            nr_f_entry.get(),
+            nr_df_entry.get(),
+            nr_x0_entry.get(),
+            nr_tol_entry.get(),
+            nr_n_entry.get(),
         )
     ),
 )
-nr5_show_button.pack(pady=20)
+nr_show_button.pack(pady=20)
 
 
 # ---- secante Screen ----
 secante = tk.Frame(window, bg=main_bg)
 
-s6_title_label = tk.Label(
+s_title_label = tk.Label(
     secante,
     text="Método de Secante",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-s6_title_label.pack(pady=20)
+s_title_label.pack(pady=20)
 
-s6_f = tk.Label(
+s_f = tk.Label(
     secante,
     text="Función:",
     font=(font, size),
     bg=main_bg,
 )
-s6_f.pack(pady=10)
-s6_f_entry = tk.Entry(secante, font=(font, size1))
-s6_f_entry.pack()
+s_f.pack(pady=10)
+s_f_entry = tk.Entry(secante, font=(font, size1))
+s_f_entry.pack()
 
-s6_x0 = tk.Label(
+s_x0 = tk.Label(
     secante,
     text="X0:",
     font=(font, size),
     bg=main_bg,
 )
-s6_x0.pack(pady=10)
-s6_x0_entry = tk.Entry(secante, font=(font, size1))
-s6_x0_entry.pack()
+s_x0.pack(pady=10)
+s_x0_entry = tk.Entry(secante, font=(font, size1))
+s_x0_entry.pack()
 
-s6_x1 = tk.Label(
+s_x1 = tk.Label(
     secante,
     text="X1:",
     font=(font, size),
     bg=main_bg,
 )
-s6_x1.pack(pady=10)
-s6_x1_entry = tk.Entry(secante, font=(font, size1))
-s6_x1_entry.pack()
+s_x1.pack(pady=10)
+s_x1_entry = tk.Entry(secante, font=(font, size1))
+s_x1_entry.pack()
 
-s6_tol = tk.Label(
+s_tol = tk.Label(
     secante,
     text="Tolerancia:",
     font=(font, size),
     bg=main_bg,
 )
-s6_tol.pack(pady=10)
-s6_tol_entry = tk.Entry(secante, font=(font, size1))
-s6_tol_entry.pack()
+s_tol.pack(pady=10)
+s_tol_entry = tk.Entry(secante, font=(font, size1))
+s_tol_entry.pack()
 
-s6_n = tk.Label(
+s_n = tk.Label(
     secante,
     text="Iteraciones:",
     font=(font, size),
     bg=main_bg,
 )
-s6_n.pack(pady=10)
-s6_n_entry = tk.Entry(secante, font=(font, size1))
-s6_n_entry.pack()
+s_n.pack(pady=10)
+s_n_entry = tk.Entry(secante, font=(font, size1))
+s_n_entry.pack()
 
-s6_show_button = tk.Button(
+s_show_button = tk.Button(
     secante,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.secante(
-            s6_x0_entry.get(),
-            s6_x1_entry.get(),
-            s6_f_entry.get(),
-            s6_tol_entry.get(),
-            s6_n_entry.get(),
+            s_x0_entry.get(),
+            s_x1_entry.get(),
+            s_f_entry.get(),
+            s_tol_entry.get(),
+            s_n_entry.get(),
         )
     ),
 )
-s6_show_button.pack(pady=20)
+s_show_button.pack(pady=20)
 
 
 # ---- multiple_roots Screen ----
 multiple_roots = tk.Frame(window, bg=main_bg)
 
-mr7_title_label = tk.Label(
+mr_title_label = tk.Label(
     multiple_roots,
     text="Método de Reices multiples",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-mr7_title_label.pack(pady=20)
+mr_title_label.pack(pady=20)
 
-mr7_x0 = tk.Label(
+mr_x0 = tk.Label(
     multiple_roots,
     text="X0:",
     font=(font, size),
     bg=main_bg,
 )
-mr7_x0.pack(pady=10)
-mr7_x0_entry = tk.Entry(multiple_roots, font=(font, size1))
-mr7_x0_entry.pack()
+mr_x0.pack(pady=10)
+mr_x0_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr_x0_entry.pack()
 
-mr7_f = tk.Label(
+mr_f = tk.Label(
     multiple_roots,
     text="Función:",
     font=(font, size),
     bg=main_bg,
 )
-mr7_f.pack(pady=10)
-mr7_f_entry = tk.Entry(multiple_roots, font=(font, size1))
-mr7_f_entry.pack()
+mr_f.pack(pady=10)
+mr_f_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr_f_entry.pack()
 
-mr7_df = tk.Label(
+mr_df = tk.Label(
     multiple_roots,
     text="df:",
     font=(font, size),
     bg=main_bg,
 )
-mr7_df.pack(pady=10)
-mr7_df_entry = tk.Entry(multiple_roots, font=(font, size1))
-mr7_df_entry.pack()
+mr_df.pack(pady=10)
+mr_df_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr_df_entry.pack()
 
-mr7_df2 = tk.Label(
+mr_df2 = tk.Label(
     multiple_roots,
     text="df2:",
     font=(font, size),
     bg=main_bg,
 )
-mr7_df2.pack(pady=10)
-mr7_df2_entry = tk.Entry(multiple_roots, font=(font, size1))
-mr7_df2_entry.pack()
+mr_df2.pack(pady=10)
+mr_df2_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr_df2_entry.pack()
 
-mr7_tol = tk.Label(
+mr_tol = tk.Label(
     multiple_roots,
     text="Tolerancia:",
     font=(font, size),
     bg=main_bg,
 )
-mr7_tol.pack(pady=10)
-mr7_tol_entry = tk.Entry(multiple_roots, font=(font, size1))
-mr7_tol_entry.pack()
+mr_tol.pack(pady=10)
+mr_tol_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr_tol_entry.pack()
 
-mr7_n = tk.Label(
+mr_n = tk.Label(
     multiple_roots,
     text="Iteraciones:",
     font=(font, size),
     bg=main_bg,
 )
-mr7_n.pack(pady=10)
-mr7_n_entry = tk.Entry(multiple_roots, font=(font, size1))
-mr7_n_entry.pack()
+mr_n.pack(pady=10)
+mr_n_entry = tk.Entry(multiple_roots, font=(font, size1))
+mr_n_entry.pack()
 
-mr7_show_button = tk.Button(
+mr_show_button = tk.Button(
     multiple_roots,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
         methods.multiple_roots(
-            mr7_x0_entry.get(),
-            mr7_f_entry.get(),
-            mr7_df_entry.get(),
-            mr7_df2_entry.get(),
-            mr7_tol_entry.get(),
-            mr7_n_entry.get(),
+            mr_x0_entry.get(),
+            mr_f_entry.get(),
+            mr_df_entry.get(),
+            mr_df2_entry.get(),
+            mr_tol_entry.get(),
+            mr_n_entry.get(),
         )
     ),
 )
-mr7_show_button.pack(pady=20)
+mr_show_button.pack(pady=20)
 
 
 # ---- simple_gauss Screen ----
 simple_gauss = tk.Frame(window, bg=main_bg)
 
-sg8_title_label = tk.Label(
+sg_title_label = tk.Label(
     simple_gauss,
     text="Método de Gauss simple",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-sg8_title_label.pack(pady=20)
+sg_title_label.pack(pady=20)
 
-sg8_button = tk.Button(
+sg_button = tk.Button(
     simple_gauss,
     text="Resolver",
     font=(font, size1),
@@ -842,15 +842,15 @@ sg8_button = tk.Button(
 # ---- to_aug Screen ----
 to_aug = tk.Frame(window, bg=main_bg)
 
-ta9_title_label = tk.Label(
+ta_title_label = tk.Label(
     to_aug,
     text="Método de to_aug",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-ta9_title_label.pack(pady=20)
+ta_title_label.pack(pady=20)
 
-ta9_button = tk.Button(
+ta_button = tk.Button(
     to_aug,
     text="Resolver",
     font=(font, size1),
@@ -861,15 +861,15 @@ ta9_button = tk.Button(
 # ---- gauss_partial_pivot Screen ----
 gauss_partial_pivot = tk.Frame(window, bg=main_bg)
 
-gpp12_title_label = tk.Label(
+gpp_title_label = tk.Label(
     gauss_partial_pivot,
     text="Método de Gauss de pivote parcial",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-gpp12_title_label.pack(pady=20)
+gpp_title_label.pack(pady=20)
 
-gpp12_button = tk.Button(
+gpp_button = tk.Button(
     gauss_partial_pivot,
     text="Resolver",
     font=(font, size1),
@@ -880,15 +880,15 @@ gpp12_button = tk.Button(
 # ---- gauss_total_pivot Screen ----
 gauss_total_pivot = tk.Frame(window, bg=main_bg)
 
-gtp13_title_label = tk.Label(
+gtp_title_label = tk.Label(
     gauss_total_pivot,
     text="Método de Gauss de pivote total",
     font=(font, size2, "bold"),
     bg=main_bg,
 )
-gtp13_title_label.pack(pady=20)
+gtp_title_label.pack(pady=20)
 
-gtp13_button = tk.Button(
+gtp_button = tk.Button(
     gauss_total_pivot,
     text="Resolver",
     font=(font, size1),
