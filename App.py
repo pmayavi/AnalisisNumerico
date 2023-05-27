@@ -159,6 +159,51 @@ gauss_total_pivot_button = tk.Button(
 )
 gauss_total_pivot_button.pack()
 
+lu_gauss_button = tk.Button(
+    main_screen,
+    text="Método de lu_gauss",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(lu_gauss, lug_button),
+)
+lu_gauss_button.pack()
+
+LU_partial_decomposition_button = tk.Button(
+    main_screen,
+    text="Método de LU_partial_decomposition",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(LU_partial_decomposition, lupd_button),
+)
+LU_partial_decomposition_button.pack()
+
+crout_button = tk.Button(
+    main_screen,
+    text="Método de Crout",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(crout, c_button),
+)
+crout_button.pack()
+
+dolittle_fac = tk.Button(
+    main_screen,
+    text="Método de dolittle_fac",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(dolittle_fac, df_button),
+)
+dolittle_fac.pack()
+
+cholesky_factorization = tk.Button(
+    main_screen,
+    text="Método de cholesky_factorization",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: get_matrix(cholesky_factorization, cf_button),
+)
+cholesky_factorization.pack()
+
 # ---- Sidebar ----
 sidebar = tk.Frame(window, bg=sidebar_bg, width=150)
 
@@ -894,6 +939,101 @@ gtp_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(methods.gauss_total_pivot(matrix_entries, b_entries)),
+)
+
+# ---- lu_gauss Screen ----
+lu_gauss = tk.Frame(window, bg=main_bg)
+
+lug_title_label = tk.Label(
+    lu_gauss,
+    text="Método de lu_gauss",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+lug_title_label.pack(pady=20)
+
+lug_button = tk.Button(
+    lu_gauss,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.lu_gauss(matrix_entries, b_entries)),
+)
+
+# ---- LU_partial_decomposition Screen ----
+LU_partial_decomposition = tk.Frame(window, bg=main_bg)
+
+lupd_title_label = tk.Label(
+    lu_gauss,
+    text="Método de LU_partial_decomposition",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+lupd_title_label.pack(pady=20)
+
+lupd_button = tk.Button(
+    LU_partial_decomposition,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.LU_partial_decomposition(matrix_entries, b_entries)),
+)
+
+# ---- crout Screen ----
+crout = tk.Frame(window, bg=main_bg)
+
+c_title_label = tk.Label(
+    lu_gauss,
+    text="Método de Crout",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+c_title_label.pack(pady=20)
+
+c_button = tk.Button(
+    crout,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.crout(matrix_entries, b_entries)),
+)
+
+# ---- dolittle_fac Screen ----
+dolittle_fac = tk.Frame(window, bg=main_bg)
+
+df_title_label = tk.Label(
+    lu_gauss,
+    text="Método de dolittle_fac",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+df_title_label.pack(pady=20)
+
+df_button = tk.Button(
+    dolittle_fac,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.dolittle_fac(matrix_entries, b_entries)),
+)
+
+# ---- cholesky_factorization Screen ----
+cholesky_factorization = tk.Frame(window, bg=main_bg)
+
+cf_title_label = tk.Label(
+    lu_gauss,
+    text="Método de cholesky_factorization",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+)
+cf_title_label.pack(pady=20)
+
+cf_button = tk.Button(
+    cholesky_factorization,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(methods.cholesky_factorization(matrix_entries, b_entries)),
 )
 
 # Initially show the input screen
