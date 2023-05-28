@@ -24,9 +24,13 @@ def switch_screen(screen):
     current_screen.pack()
 
 
-def show_result(res):
-    matrix_screen1.pack_forget()
-    matrix_screen2.pack_forget()
+def show_result(method, inputs):
+    try:
+        res = method(*inputs)
+    except Exception as e:
+        res = str(e) + "\n" + str(inputs)
+        print(e)
+
     result_label.config(text=str(res))
     result_screen.pack()
 
@@ -37,10 +41,28 @@ def return_to_main():
     current_screen.pack_forget()
     matrix_screen1.pack_forget()
     matrix_screen2.pack_forget()
+    result_screen.pack_forget()
     current_screen = main_screen
 
     # Show the main screen
     main_screen.pack()
+
+
+def get_matrix_values():
+    global matrix_entries
+    val = []
+    for row in matrix_entries:
+        for entry in row:
+            val.append(entry.get())
+    return val
+
+
+def get_b_values():
+    global matb_entries
+    val = []
+    for entry in matb_entries:
+        val.append(entry.get())
+    return val
 
 
 # Create a new themed window
@@ -183,12 +205,13 @@ is_show_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.incremental_search(
+        methods.incremental_search,
+        (
             is_entries[0].get(),
             is_entries[1].get(),
             is_entries[2].get(),
             is_entries[3].get(),
-        )
+        ),
     ),
 )
 is_show_button.pack(pady=20)
@@ -226,13 +249,14 @@ b_show_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.biseccion(
+        methods.biseccion,
+        (
             b_entries[0].get(),
             b_entries[1].get(),
             b_entries[2].get(),
             b_entries[3].get(),
             b_entries[4].get(),
-        )
+        ),
     ),
 )
 b_show_button.pack(pady=20)
@@ -277,14 +301,15 @@ rf_show_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.regla_falsa(
+        methods.regla_falsa,
+        (
             rf_entries[0].get(),
             rf_entries[1].get(),
             rf_entries[2].get(),
             rf_entries[3].get(),
             rf_entries[4].get(),
             rf_entries[5].get(),
-        )
+        ),
     ),
 )
 rf_show_button.pack(pady=20)
@@ -322,13 +347,14 @@ pf_show_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.punto_fijo(
+        methods.punto_fijo,
+        (
             pf_entries[0].get(),
             pf_entries[1].get(),
             pf_entries[2].get(),
             pf_entries[3].get(),
             pf_entries[4].get(),
-        )
+        ),
     ),
 )
 pf_show_button.pack(pady=20)
@@ -365,13 +391,14 @@ nr_show_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.newton_raphson(
+        methods.newton_raphson,
+        (
             nr_entries[0].get(),
             nr_entries[1].get(),
             nr_entries[2].get(),
             nr_entries[3].get(),
             nr_entries[4].get(),
-        )
+        ),
     ),
 )
 nr_show_button.pack(pady=20)
@@ -409,13 +436,14 @@ s_show_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.secante(
+        methods.secante,
+        (
             s_entries[1].get(),
             s_entries[2].get(),
             s_entries[0].get(),
             s_entries[3].get(),
             s_entries[4].get(),
-        )
+        ),
     ),
 )
 s_show_button.pack(pady=20)
@@ -453,14 +481,15 @@ mr_show_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.multiple_roots(
+        methods.multiple_roots,
+        (
             mr_entries[0].get(),
             mr_entries[1].get(),
             mr_entries[2].get(),
             mr_entries[3].get(),
             mr_entries[4].get(),
             mr_entries[5].get(),
-        )
+        ),
     ),
 )
 mr_show_button.pack(pady=20)
@@ -481,7 +510,9 @@ sg_button = tk.Button(
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: show_result(methods.simple_gauss(matrix_entries, matb_entries)),
+    command=lambda: show_result(
+        methods.simple_gauss, (get_matrix_values(), get_b_values())
+    ),
 )
 
 # ---- to_aug Screen ----
@@ -499,7 +530,7 @@ ta_button = tk.Button(
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: show_result(methods.to_aug(matrix_entries, matb_entries)),
+    command=lambda: show_result(methods.to_aug, (matrix_entries, matb_entries)),
 )
 
 # ---- gauss_partial_pivot Screen ----
@@ -518,7 +549,7 @@ gpp_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.gauss_partial_pivot(matrix_entries, matb_entries)
+        methods.gauss_partial_pivot, (matrix_entries, matb_entries)
     ),
 )
 
@@ -538,7 +569,7 @@ gtp_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.gauss_total_pivot(matrix_entries, matb_entries)
+        methods.gauss_total_pivot, (matrix_entries, matb_entries)
     ),
 )
 
@@ -557,7 +588,7 @@ lug_button = tk.Button(
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: show_result(methods.lu_gauss(matrix_entries, matb_entries)),
+    command=lambda: show_result(methods.lu_gauss, (matrix_entries, matb_entries)),
 )
 
 # ---- LU_partial_decomposition Screen ----
@@ -576,7 +607,7 @@ lupd_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.LU_partial_decomposition(matrix_entries, matb_entries)
+        methods.LU_partial_decomposition, (matrix_entries, matb_entries)
     ),
 )
 
@@ -595,7 +626,7 @@ c_button = tk.Button(
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: show_result(methods.crout(matrix_entries, matb_entries)),
+    command=lambda: show_result(methods.crout, (matrix_entries, matb_entries)),
 )
 
 # ---- dolittle_fac Screen ----
@@ -613,7 +644,7 @@ df_button = tk.Button(
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: show_result(methods.dolittle_fac(matrix_entries, matb_entries)),
+    command=lambda: show_result(methods.dolittle_fac, (matrix_entries, matb_entries)),
 )
 
 # ---- cholesky_factorization Screen ----
@@ -632,7 +663,7 @@ cf_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.cholesky_factorization(matrix_entries, matb_entries)
+        methods.cholesky_factorization, (matrix_entries, matb_entries)
     ),
 )
 
@@ -705,14 +736,15 @@ se_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.seidel(
+        methods.seidel,
+        (
             matrix_entries,
             matb_entries,
             se_entries[0].get(),
             se_entries[1].get(),
             se_entries[2].get(),
             se_selected_option,
-        )
+        ),
     ),
 )
 
