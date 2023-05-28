@@ -1,6 +1,7 @@
 import tkinter as tk
 from ttkthemes import ThemedTk
 import metodos as methods
+import numpy as np
 
 # Style variables
 font = "Arial"
@@ -52,17 +53,19 @@ def get_matrix_values():
     global matrix_entries
     val = []
     for row in matrix_entries:
+        arr = []
         for entry in row:
-            val.append(entry.get())
-    return val
+            arr.append(float(entry.get()))
+        val.append(arr)
+    return np.array(val)
 
 
 def get_b_values():
     global matb_entries
     val = []
     for entry in matb_entries:
-        val.append(entry.get())
-    return val
+        val.append(float(entry.get()))
+    return np.array(val)
 
 
 # Create a new themed window
@@ -207,10 +210,10 @@ is_show_button = tk.Button(
     command=lambda: show_result(
         methods.incremental_search,
         (
-            is_entries[0].get(),
-            is_entries[1].get(),
-            is_entries[2].get(),
-            is_entries[3].get(),
+            float(is_entries[0].get()),
+            float(is_entries[1].get()),
+            float(is_entries[2].get()),
+            float(is_entries[3].get()),
         ),
     ),
 )
