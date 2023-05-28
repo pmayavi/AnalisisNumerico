@@ -636,6 +636,167 @@ cf_button = tk.Button(
     ),
 )
 
+# ---- seidel Screen ----
+seidel = tk.Frame(window, bg=main_bg)
+seidel_ins = tk.Frame(seidel, bg=main_bg)
+seidel_ins.pack(side="left", padx=30)
+
+tk.Label(
+    seidel_ins,
+    text="Método de Seidel",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+).pack(pady=20)
+
+tk.Label(
+    seidel,
+    bg=main_bg,
+).pack(pady=17)
+
+
+def se_on_select(event):
+    global se_selected_option, se_dropdown
+    se_selected_option.ser(se_dropdown.get())
+
+
+se_labels = ["X Inicial", "Tolerancia:", "Iteraciones:"]
+se_entries = [None] * len(se_labels)
+count = 0
+
+for label_text in se_labels:
+    tk.Label(
+        seidel_ins,
+        text=label_text,
+        font=(font, size),
+        bg=main_bg,
+        pady=10,
+    ).pack()
+
+    se_entries[count] = tk.Entry(seidel_ins, font=(font, size1))
+    se_entries[count].pack()
+
+
+tk.Label(
+    seidel_ins,
+    text="err type",
+    font=(font, size),
+    bg=main_bg,
+    pady=10,
+).pack()
+
+se_selected_option = tk.StringVar()
+se_selected_option.set("abs")
+se_dropdown = tk.OptionMenu(
+    seidel_ins,
+    se_selected_option,
+    *["abs", "rel"],
+    command=se_on_select,
+)
+se_dropdown.config(
+    font=(font, size),
+    width=15,
+)
+se_dropdown.pack()
+
+
+se_button = tk.Button(
+    seidel,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.seidel(
+            matrix_entries,
+            matb_entries,
+            se_entries[0].get(),
+            se_entries[1].get(),
+            se_entries[2].get(),
+            se_selected_option,
+        )
+    ),
+)
+
+# ---- jacobi Screen ----
+jacobi = tk.Frame(window, bg=main_bg)
+jacobi_ins = tk.Frame(jacobi, bg=main_bg)
+jacobi_ins.pack(side="left", padx=30)
+
+tk.Label(
+    jacobi_ins,
+    text="Método de Jacobi",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+).pack(pady=20)
+
+tk.Label(
+    jacobi,
+    bg=main_bg,
+).pack(pady=17)
+
+
+def j_on_select(event):
+    global j_selected_option, j_dropdown
+    j_selected_option.ser(j_dropdown.get())
+
+
+j_labels = ["X Inicial", "Tolerancia:", "Iteraciones:"]
+j_entries = [None] * len(j_labels)
+count = 0
+
+for label_text in j_labels:
+    tk.Label(
+        jacobi_ins,
+        text=label_text,
+        font=(font, size),
+        bg=main_bg,
+        pady=10,
+    ).pack()
+
+    j_entries[count] = tk.Entry(jacobi_ins, font=(font, size1))
+    j_entries[count].pack()
+
+
+tk.Label(
+    jacobi_ins,
+    text="err type",
+    font=(font, size),
+    bg=main_bg,
+    pady=10,
+).pack()
+
+j_selected_option = tk.StringVar()
+j_selected_option.set("abs")
+j_dropdown = tk.OptionMenu(
+    jacobi_ins,
+    j_selected_option,
+    *["abs", "rel"],
+    command=j_on_select,
+)
+j_dropdown.config(
+    font=(font, size),
+    width=15,
+)
+j_dropdown.pack()
+
+
+j_button = tk.Button(
+    jacobi,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.jacobi,
+        (
+            matrix_entries,
+            matb_entries,
+            j_entries[0].get(),
+            j_entries[1].get(),
+            j_entries[2].get(),
+            j_selected_option,
+        ),
+    ),
+)
+
 # Define button information
 button_info = [
     ("Método de Búsqueda Incremental", switch_screen, incremental_search, None),
@@ -654,6 +815,8 @@ button_info = [
     ("Método de Crout", get_matrix, crout, c_button),
     ("Método de dolittle_fac", get_matrix, dolittle_fac, df_button),
     ("Método de cholesky_factorization", get_matrix, cholesky_factorization, cf_button),
+    ("Método de Seidel", get_matrix, seidel, se_button),
+    ("Método de Jacobi", get_matrix, jacobi, j_button),
 ]
 
 # ---- Main Screen ----
