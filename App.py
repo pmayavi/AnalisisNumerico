@@ -12,6 +12,8 @@ main_bg = "#%02x%02x%02x" % (255, 255, 151)
 button_bg = "#%02x%02x%02x" % (int(255 * 0.9), int(255 * 0.9), int(151 * 0.9))
 sidebar_bg = "#%02x%02x%02x" % (255, 179, 71)
 sidebutton_bg = "#%02x%02x%02x" % (int(255 * 0.9), int(179 * 0.9), int(71 * 0.9))
+table_bg1 = "#%02x%02x%02x" % (255, 195, 102)
+table_bg2 = "#%02x%02x%02x" % (255, 189, 90)
 button_width = 30
 
 
@@ -26,13 +28,46 @@ def switch_screen(screen):
 
 
 def show_result(method, inputs):
+    global current_screen, matrix_screen1, matrix_screen2, table_screen
+    current_screen.pack_forget()
+    matrix_screen1.pack_forget()
+    matrix_screen2.pack_forget()
+    for widget in table_screen.winfo_children():
+        widget.grid_forget()
+
     try:
         res = method(*inputs)
     except Exception as e:
         res = str(e) + "\n" + str(inputs)
         print(e)
+    print(res)
 
-    result_label.config(text=str(res))
+    if isinstance(res, tuple):
+        result_label.config(text=" ".join(str(item) for item in res[1]))
+        row = 0
+        c1 = main_bg
+        c2 = table_bg1
+        for iter in res[0][-10:]:
+            col = 0
+            color = c1
+            c1 = c2
+            c2 = color
+            for element in iter:
+                tk.Label(
+                    table_screen,
+                    text=str(round(element, 6)),
+                    font=(font, size),
+                    relief=tk.RIDGE,
+                    bg=color,
+                    borderwidth=10,
+                    highlightbackground=table_bg2,
+                    width=10,
+                ).grid(row=row, column=col, sticky="nsew")
+                col += 1
+            row += 1
+
+    else:
+        result_label.config(text=str(res))
     result_screen.pack()
 
 
@@ -172,6 +207,8 @@ result_label = tk.Label(
     bg=main_bg,
 )
 result_label.pack(pady=20)
+table_screen = tk.Frame(result_screen, bg=main_bg)
+table_screen.pack()
 
 
 # ---- Incremental Search Screen ----
@@ -210,9 +247,9 @@ is_show_button = tk.Button(
     command=lambda: show_result(
         methods.incremental_search,
         (
-            float(is_entries[0].get()),
+            is_entries[0].get().replace("^", "**"),
             float(is_entries[1].get()),
-            float(is_entries[2].get()),
+            is_entries[2].get().replace("^", "**"),
             float(is_entries[3].get()),
         ),
     ),
@@ -254,11 +291,11 @@ b_show_button = tk.Button(
     command=lambda: show_result(
         methods.biseccion,
         (
-            b_entries[0].get(),
-            b_entries[1].get(),
-            b_entries[2].get(),
-            b_entries[3].get(),
-            b_entries[4].get(),
+            b_entries[0].get().replace("^", "**"),
+            float(b_entries[1].get()),
+            float(b_entries[2].get()),
+            float(b_entries[3].get()),
+            float(b_entries[4].get()),
         ),
     ),
 )
@@ -306,12 +343,12 @@ rf_show_button = tk.Button(
     command=lambda: show_result(
         methods.regla_falsa,
         (
-            rf_entries[0].get(),
-            rf_entries[1].get(),
-            rf_entries[2].get(),
-            rf_entries[3].get(),
-            rf_entries[4].get(),
-            rf_entries[5].get(),
+            rf_entries[0].get().replace("^", "**"),
+            float(rf_entries[1].get()),
+            float(rf_entries[2].get()),
+            float(rf_entries[3].get()),
+            float(rf_entries[4].get()),
+            float(rf_entries[5].get()),
         ),
     ),
 )
@@ -327,7 +364,7 @@ tk.Label(
     bg=main_bg,
 ).pack(pady=20)
 
-pf_labels = ["Función F:", "Función F:", "X Inicial:", "Tolerancia:", "Iteraciones:"]
+pf_labels = ["Función F:", "Función G:", "X Inicial:", "Tolerancia:", "Iteraciones:"]
 pf_entries = [None] * len(pf_labels)
 count = 0
 
@@ -352,11 +389,11 @@ pf_show_button = tk.Button(
     command=lambda: show_result(
         methods.punto_fijo,
         (
-            pf_entries[0].get(),
-            pf_entries[1].get(),
-            pf_entries[2].get(),
-            pf_entries[3].get(),
-            pf_entries[4].get(),
+            pf_entries[0].get().replace("^", "**"),
+            pf_entries[1].get().replace("^", "**"),
+            float(pf_entries[2].get()),
+            float(pf_entries[3].get()),
+            float(pf_entries[4].get()),
         ),
     ),
 )
@@ -396,11 +433,11 @@ nr_show_button = tk.Button(
     command=lambda: show_result(
         methods.newton_raphson,
         (
-            nr_entries[0].get(),
-            nr_entries[1].get(),
-            nr_entries[2].get(),
-            nr_entries[3].get(),
-            nr_entries[4].get(),
+            nr_entries[0].get().replace("^", "**"),
+            nr_entries[1].get().replace("^", "**"),
+            float(nr_entries[2].get()),
+            float(nr_entries[3].get()),
+            float(nr_entries[4].get()),
         ),
     ),
 )
@@ -441,11 +478,11 @@ s_show_button = tk.Button(
     command=lambda: show_result(
         methods.secante,
         (
-            s_entries[1].get(),
-            s_entries[2].get(),
-            s_entries[0].get(),
-            s_entries[3].get(),
-            s_entries[4].get(),
+            s_entries[1].get().replace("^", "**"),
+            float(s_entries[2].get()),
+            float(s_entries[0].get()),
+            float(s_entries[3].get()),
+            float(s_entries[4].get()),
         ),
     ),
 )
@@ -486,12 +523,12 @@ mr_show_button = tk.Button(
     command=lambda: show_result(
         methods.multiple_roots,
         (
-            mr_entries[0].get(),
-            mr_entries[1].get(),
-            mr_entries[2].get(),
-            mr_entries[3].get(),
-            mr_entries[4].get(),
-            mr_entries[5].get(),
+            float(mr_entries[0].get()),
+            mr_entries[1].get().replace("^", "**"),
+            mr_entries[2].get().replace("^", "**"),
+            mr_entries[3].get().replace("^", "**"),
+            float(mr_entries[4].get()),
+            float(mr_entries[5].get()),
         ),
     ),
 )
@@ -518,24 +555,6 @@ sg_button = tk.Button(
     ),
 )
 
-# ---- to_aug Screen ----
-to_aug = tk.Frame(window, bg=main_bg)
-
-tk.Label(
-    to_aug,
-    text="Método de to_aug",
-    font=(font, size2, "bold"),
-    bg=main_bg,
-).pack(pady=20)
-
-ta_button = tk.Button(
-    to_aug,
-    text="Resolver",
-    font=(font, size1),
-    bg=button_bg,
-    command=lambda: show_result(methods.to_aug, (matrix_entries, matb_entries)),
-)
-
 # ---- gauss_partial_pivot Screen ----
 gauss_partial_pivot = tk.Frame(window, bg=main_bg)
 
@@ -552,7 +571,7 @@ gpp_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.gauss_partial_pivot, (matrix_entries, matb_entries)
+        methods.gauss_partial_pivot, (get_matrix_values(), get_b_values())
     ),
 )
 
@@ -572,7 +591,7 @@ gtp_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.gauss_total_pivot, (matrix_entries, matb_entries)
+        methods.gauss_total_pivot, (get_matrix_values(), get_b_values())
     ),
 )
 
@@ -591,7 +610,9 @@ lug_button = tk.Button(
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: show_result(methods.lu_gauss, (matrix_entries, matb_entries)),
+    command=lambda: show_result(
+        methods.lu_gauss, (get_matrix_values(), get_b_values())
+    ),
 )
 
 # ---- LU_partial_decomposition Screen ----
@@ -610,7 +631,7 @@ lupd_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.LU_partial_decomposition, (matrix_entries, matb_entries)
+        methods.LU_partial_decomposition, (get_matrix_values(), get_b_values())
     ),
 )
 
@@ -629,7 +650,7 @@ c_button = tk.Button(
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: show_result(methods.crout, (matrix_entries, matb_entries)),
+    command=lambda: show_result(methods.crout, (get_matrix_values(), get_b_values())),
 )
 
 # ---- dolittle_fac Screen ----
@@ -647,7 +668,9 @@ df_button = tk.Button(
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
-    command=lambda: show_result(methods.dolittle_fac, (matrix_entries, matb_entries)),
+    command=lambda: show_result(
+        methods.dolittle_fac, (get_matrix_values(), get_b_values())
+    ),
 )
 
 # ---- cholesky_factorization Screen ----
@@ -666,7 +689,7 @@ cf_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.cholesky_factorization, (matrix_entries, matb_entries)
+        methods.cholesky_factorization, (get_matrix_values(), get_b_values())
     ),
 )
 
@@ -741,11 +764,11 @@ se_button = tk.Button(
     command=lambda: show_result(
         methods.seidel,
         (
-            matrix_entries,
-            matb_entries,
-            se_entries[0].get(),
-            se_entries[1].get(),
-            se_entries[2].get(),
+            get_matrix_values(),
+            get_b_values(),
+            float(se_entries[0].get()),
+            float(se_entries[1].get()),
+            float(se_entries[2].get()),
             se_selected_option,
         ),
     ),
@@ -822,11 +845,11 @@ j_button = tk.Button(
     command=lambda: show_result(
         methods.jacobi,
         (
-            matrix_entries,
-            matb_entries,
-            j_entries[0].get(),
-            j_entries[1].get(),
-            j_entries[2].get(),
+            get_matrix_values(),
+            get_b_values(),
+            float(j_entries[0].get()),
+            float(j_entries[1].get()),
+            float(j_entries[2].get()),
             j_selected_option,
         ),
     ),
@@ -842,7 +865,6 @@ button_info = [
     ("Método de Secante", switch_screen, secante, None),
     ("Método de Raices multiples", switch_screen, multiple_roots, None),
     ("Método de Gauss simple", get_matrix, simple_gauss, sg_button),
-    ("Método de to_aug", get_matrix, to_aug, ta_button),
     ("Método de Gauss de pivote parcial", get_matrix, gauss_partial_pivot, gpp_button),
     ("Método de Gauss de pivote total", get_matrix, gauss_total_pivot, gtp_button),
     ("Método de lu_gauss", get_matrix, lu_gauss, lug_button),
