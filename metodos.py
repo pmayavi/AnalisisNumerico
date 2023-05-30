@@ -3,35 +3,36 @@ import numpy as np
 import math
 import sympy as sym
 
-def incremental_search(f, xinit, dx, n):
-    x0 = xinit
-    fx0 = f(x0)
-    res = []
-    cont = 1
-    if fx0 == 0:
-        res.append([cont, x0, x0])
-        cont += 1
-    actual_iterations = 1
-    x1 = x0 + dx
-    fx1 = f(x1)
+def incremental_search(f, x_init, delta_x, num_iterations):
+    intervals = []
+    message=[]
+    x = x_init
+    fx = fun(x, f)
+    for i in range(1, num_iterations):
+        x_new = x + delta_x
+        fx_new = fun(x_new,f)
+        if fx * fx_new <= 0:
+            intervals.append((i, x, x_new))
+        x = x_new
+        fx = fx_new
+        if fx == 0:
+            intervals.append((i, x_new, x_new))
+            x = x_new
+            fx = fun(x,f)
+    if intervals:
+        util = "Se encontraron intervalos en los que f(x) cambia de signo"
+    else:
+        util = "No se encontraron intervalos en los que f(x) cambia de signo en el número máximo de iteraciones"
+    for i, interval in enumerate(intervals):
+        message.append(f"Intervalo {i+1}: {interval}")
+    print(util)
+    message.append(util)
+    return message
 
-    while actual_iterations < n:
-        x0 = x1
-        x1 = x0 + dx
-
-        fx0 = fx1
-        fx1 = f(x1)
-
-        if fx1 == 0:
-            res.append ([cont, x1, x1])
-            cont+=1
-        elif fx0 * fx1 < 0:
-            res.append ([cont, x0, x1])
-            cont+=1
-
-        actual_iterations = actual_iterations + 1
-
-    return res
+def fun(x, expression):
+    result = sym.simplify(expression)
+    substituted = result.subs('x', x)
+    return substituted
 
 
 def biseccion(f, xi, xs, tol, niter):
@@ -111,157 +112,115 @@ def biseccion(f, xi, xs, tol, niter):
     return res, res2
 
 
-def regla_falsa(f,t_error,xinf,xsup,tol,niter):
-    x=xinf
-    fxinf=eval(f)
-    x=xsup
-    res2= 'nan'
-    fxsup=eval(f)
-    print(fxinf)
-    print(fxsup)
-    resultados = [] #matriz para guardar resultados
-    if fxinf==0:
-        res2 =  (xinf," es raiz")
-    elif fxsup==0:
-        res2 =  (xsup," es raiz")
-    elif fxinf*fxsup<0:
-        xm = xinf-((fxinf*(xsup-xinf))/float(fxsup-fxinf))
-        x=xm
-        fxm=eval(f)
-        contador=1
-        error=float(tol)+1
-        resultados.append([contador,xinf,xsup,xm,fxm,'nan'])
-        while(fxm!=0 and error>tol and contador<niter):
-            if fxinf*fxm<0:
-                xsup=xm
-                fxsup=fxm
+def regla_falsa(f, x_lower, x_upper, tol, max_iterations, t_error):
+    results = []
+    fx_lower = fun_false(x_lower, f)
+    fx_upper = fun_false(x_upper, f)
+    if fx_lower == 0:
+        return [], f"{x_lower} es raíz"
+    elif fx_upper == 0:
+        return [], f"{x_upper} es raíz"
+    elif fx_lower * fx_upper < 0:
+        x = (x_lower * fx_upper - x_upper * fx_lower) / (fx_upper - fx_lower)
+        fx = fun_false(x, f)
+        iteration = 1
+        error = tol + 1
+        results.append([iteration, x_lower, x_upper, x, fx, float('nan')])
+        while fx != 0 and error > tol and iteration < max_iterations:
+            if fx_lower * fx < 0:
+                x_upper = x
+                fx_upper = fx
             else:
-                xinf=xm
-                fxinf=fxm
-            temp=xm
-            xm = xinf-((fxinf*(xsup-xinf))/float(fxsup-fxinf))
-            x=xm
-            fxm=eval(f)
+                x_lower = x
+                fx_lower = fx
+            x_prev = x
+            x = (x_lower * fx_upper - x_upper * fx_lower) / (fx_upper - fx_lower)
+            fx = fun_false(x, f)
             if t_error == 1:
-                error = abs(xm - temp)
+                error = abs((x - x_prev) / x)
             else:
-                error=abs((xm-temp)/xm)
-            contador+=1
-            resultados.append([contador,xinf,xsup,xm,fxm,error])
-        if fxm==0:
-            res2= ("xm es raiz")
+                error = abs(x - x_prev)
+            iteration += 1
+            results.append([iteration, x_lower, x_upper, x, fx, error])
+        if fx == 0:
+            return results, f"{x} es raíz"
+        
         elif error <= tol:
-            res2 = ( xm," se aproxima a una raiz con una tolerancia de ",tol)
+            return results, f"{x} se aproxima a una raíz con una tolerancia de {tol}"
+        
         else:
-            res2= ("Maximo de iteraciones alcanzado")
+            return results, "Se alcanzó el número máximo de iteraciones"
     else:
-        res2= ("El intervalo es inadecuado")
-    return resultados, res2
+        return [], "El intervalo es inadecuado"
+    
+def fun_false(x, expression):
+    result = eval(expression)
+    return result
 
-
-def punto_fijo(f, g, x0, tol, niter):
-    X0 = x0
-    Tol = tol
-    Niter = niter
-    Fun = f
-    g = g
-    res = []
-    res2= 'nan'
-    fn = []
-    xn = []
-    E = []
-    N = []
-    gx = []
-    x = X0
-    f = eval(Fun)
-    c = 0
-    Error = 100
-    fn.append(f)
-    xn.append(x)
-    E.append(Error)
-    N.append(c)
-    while Error > Tol and f != 0 and c < Niter:
-        x = eval(g)
-        gx.append(x)
-        fe = eval(Fun)
-        fn.append(fe)
-        xn.append(x)
-        c = c + 1
-        Error = abs(xn[c] - xn[c - 1])
-        N.append(c)
-        E.append(Error)
-    gx.append(x)
-    if fe == 0:
-        s = x
-        res2 = (s, "es raiz de f(x)")
-    elif Error < Tol:
-        s = x
-        res2 = (s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
-
+def fixed_point(f, g, x0, tol, max_iterations):
+    results = []
+    x = x0
+    fx = fun_fijo(x,f)
+    iteration = 0
+    error = tol + 1
+    results.append([iteration, x, fx, g_fun_fijo(x, g), float('nan')])
+    while fx != 0 and error > tol and iteration < max_iterations:
+        x = g_fun_fijo(x, g)
+        fx = fun_fijo(x,f)
+        error = abs(results[-1][1] - x)
+        iteration += 1
+        results.append([iteration, x, fx,g_fun_fijo(x, g), error])
+    if fx == 0:
+        return results, f"{x} es raíz"
+    elif error <= tol:
+        return results, f"{x} se aproxima a una raíz con una tolerancia de {tol}"
     else:
-        s = x
-        res2 = ("Fracaso en ", Niter, " iteraciones ")
+        return results, "Se alcanzó el número máximo de iteraciones"
+    
+def fun_fijo(x, expression):
+    result = sym.simplify(expression)
+    substituted = result.subs('x', x)
+    return substituted
 
-    for i in range(0, len(N)):
-        res.append([N[i], xn[i], fn[i], gx[i], E[i]])
-    for i in res:
-        print(i)
-    return res, res2
+def g_fun_fijo(x, expression):
+    result = sym.simplify(expression)
+    substituted = result.subs('x', x)
+    return substituted
 
+def newton_raphson(f, df, x0, tol, max_iterations):
+        results = []
+        x = x0
+        fx = eval_f(f,x)
+        dfx = eval_df(df,x)
+        iteration = 0
+        error = tol + 1
+        results.append([iteration, '{:.10f}'.format(x), '{:.1e}'.format(fx).replace('e-0', 'e-'),'NaN'])
+        while fx != 0 and dfx != 0 and error > tol and iteration < max_iterations:
+            x_prev = x
+            x -= fx / dfx
+            fx = eval_f(f,x)
+            dfx = eval_df(df,x)
+            error = abs(x_prev - x)
+            iteration += 1
+            results.append([iteration, '{:.10f}'.format(x), '{:.1e}'.format(fx).replace('e-0', 'e-'), '{:.1e}'.format(error).replace('e-0', 'e-')])
+        if fx == 0:
+            return results,
+        elif error <= tol:
+            util="An approximation of the roof was found for x"+str(len(results)-1)+" "+str(results[-1][1])
+            return results, util
+        else:
+            return results, "Given the number of iterations and the tolerance, it was impossible to find a satisfying root"
+        
+def eval_f(f,x):
+    result = sym.simplify(f)
+    substituted = result.subs('x', x)
+    return substituted
 
-def newton_raphson(f, df, x0, tol, niter):
-    X0 = x0
-    Tol = tol
-    Niter = niter
-    Fun = f
-    df = df
-    res = []
-    res2= 'nan'
-    fn=[]
-    xn=[]
-    E=[]
-    N=[]
-    x=X0
-    #f=eval(Fun)
-    f = eval(Fun)
-    derivada = eval(df)
-
-    #derivada=eval(df)
-    c=0
-    Error=100
-    fn.append(f)
-    xn.append(x)
-    E.append(Error)
-    N.append(c)
-    while Error>Tol and f!=0 and derivada!=0  and c<Niter:
-        x=x-f/derivada
-        f = eval(Fun)
-        derivada = eval(df)
-        fn.append(f)
-        xn.append(x)
-        c=c+1
-        Error=abs(xn[c]-xn[c-1]) ##Decimales correctos
-        #Error=abs((xn[c]-xn[c-1])/xn[c]) ## Cifras significativas
-        N.append(c)
-        E.append(Error)
-    if f==0:
-        s=x
-        res2 = (s,"es raiz de f(x)")
-    elif Error<Tol:
-        s=x
-        res2 = (s,"es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
-
-    else:
-        s=x
-        res2 = ("Fracaso en ",Niter, " iteraciones ")
-
-
-    for i in range(0, len(N)):
-        res.append([N[i], xn[i], fn[i], E[i]])
-    for i in res:
-        print(i)
-    return res, res2
-
+def eval_df(f,x):
+    result = sym.simplify(f)
+    substituted = result.subs('x', x)
+    return substituted
+        
 
 def secante(x0, x1, f, tol, niter):
     X0 = x0
@@ -389,13 +348,12 @@ def multiple_roots(x0, f, df, df2, tol, niter):
     return res, res2
 
 
-def simple_gauss(a, b):
+def simple_gauss(a, b, s):
     ab = to_aug(a, b)
     res = []
     res.append(np.copy(ab).tolist())
-    assert a.shape[0] == a.shape[1]
 
-    size = a.shape[0]
+    size = s
 
     # Stages
 
@@ -406,12 +364,14 @@ def simple_gauss(a, b):
             for k in range(i, size + 1):
                 ab[j][k] = ab[j][k] - (multiplier * ab[i][k])
         res.append(np.copy(ab).tolist())
-
+    
     return res
+
 
 
 def to_aug(a, b):
     return np.column_stack((a, b))
+
 
 
 def regressive_substitution(ab, labels=None):
@@ -977,3 +937,9 @@ def lagrange(puntos):
         producto = producto + l * (arreglo_y[k])
     producto = sym.simplify(sym.expand(producto))
     return producto, ls
+
+
+simple_gauss([[1,2,3],[4,5,6],[7,8,10]],[1,-2,5],3)
+
+biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
+regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
