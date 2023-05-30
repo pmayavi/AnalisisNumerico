@@ -855,6 +855,82 @@ j_button = tk.Button(
     ),
 )
 
+# ---- next_iter Screen ----
+next_iter = tk.Frame(window, bg=main_bg)
+
+tk.Label(
+    next_iter,
+    text="Método de next_iter",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+).pack(pady=20)
+
+tk.Label(
+    next_iter,
+    bg=main_bg,
+).pack(pady=17)
+
+tk.Label(
+    next_iter,
+    text="X Anterior",
+    font=(font, size),
+    bg=main_bg,
+    pady=10,
+).pack()
+
+ni_entry = tk.Entry(next_iter, font=(font, size1))
+ni_entry.pack()
+
+
+ni_button = tk.Button(
+    next_iter,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.next_iter,
+        (get_matrix_values(), get_b_values(), float(ni_entry.get())),
+    ),
+)
+
+# ---- next_iter2 Screen ----
+next_iter2 = tk.Frame(window, bg=main_bg)
+
+tk.Label(
+    next_iter2,
+    text="Método de next_iter2",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+).pack(pady=20)
+
+tk.Label(
+    next_iter2,
+    bg=main_bg,
+).pack(pady=17)
+
+tk.Label(
+    next_iter2,
+    text="X Anterior",
+    font=(font, size),
+    bg=main_bg,
+    pady=10,
+).pack()
+
+ni2_entry = tk.Entry(next_iter2, font=(font, size1))
+ni2_entry.pack()
+
+
+ni2_button = tk.Button(
+    next_iter2,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.next_iter2,
+        (get_matrix_values(), get_b_values(), float(ni2_entry.get())),
+    ),
+)
+
 # Define button information
 button_info = [
     ("Método de Búsqueda Incremental", switch_screen, incremental_search, None),
@@ -874,6 +950,8 @@ button_info = [
     ("Método de cholesky_factorization", get_matrix, cholesky_factorization, cf_button),
     ("Método de Seidel", get_matrix, seidel, se_button),
     ("Método de Jacobi", get_matrix, jacobi, j_button),
+    ("Método de next_iter", get_matrix, next_iter, ni_button),
+    ("Método de next_iter2", get_matrix, next_iter2, ni2_button),
 ]
 
 # ---- Main Screen ----

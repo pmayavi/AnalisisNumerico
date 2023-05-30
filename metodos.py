@@ -3,14 +3,15 @@ import numpy as np
 import math
 import sympy as sym
 
+
 def incremental_search(f, x_init, delta_x, num_iterations):
     intervals = []
-    message=[]
+    message = []
     x = x_init
     fx = fun(x, f)
     for i in range(1, num_iterations):
         x_new = x + delta_x
-        fx_new = fun(x_new,f)
+        fx_new = fun(x_new, f)
         if fx * fx_new <= 0:
             intervals.append((i, x, x_new))
         x = x_new
@@ -18,7 +19,7 @@ def incremental_search(f, x_init, delta_x, num_iterations):
         if fx == 0:
             intervals.append((i, x_new, x_new))
             x = x_new
-            fx = fun(x,f)
+            fx = fun(x, f)
     if intervals:
         util = "Se encontraron intervalos en los que f(x) cambia de signo"
     else:
@@ -29,9 +30,10 @@ def incremental_search(f, x_init, delta_x, num_iterations):
     message.append(util)
     return message
 
+
 def fun(x, expression):
     result = sym.simplify(expression)
-    substituted = result.subs('x', x)
+    substituted = result.subs("x", x)
     return substituted
 
 
@@ -42,73 +44,73 @@ def biseccion(f, xi, xs, tol, niter):
     Niter = niter
     Fun = f
     res = []
-    fm=[]
-    E=[]
-    xn=[]
-    N=[]
+    fm = []
+    E = []
+    xn = []
+    N = []
     a = []
-    b= []
-    c=0
-    x=Xi
-    fi=eval(Fun)
-    x=Xs
-    fs=eval(Fun)
+    b = []
+    c = 0
+    x = Xi
+    fi = eval(Fun)
+    x = Xs
+    fs = eval(Fun)
     Error = 0
-    res2= 'nan'
-    if fi==0:
-        s=Xi
-        E=0
+    res2 = "nan"
+    if fi == 0:
+        s = Xi
+        E = 0
         res2 = (Xi, "es raiz de f(x)")
-    elif fs==0:
-        s=Xs
-        E=0
+    elif fs == 0:
+        s = Xs
+        E = 0
         res2 = (Xs, "es raiz de f(x)")
-    elif fs*fi<0:
-        c=0
-        Xm=(Xi+Xs)/2
-        x=Xm
-        fe=eval(Fun)
+    elif fs * fi < 0:
+        c = 0
+        Xm = (Xi + Xs) / 2
+        x = Xm
+        fe = eval(Fun)
         fm.append(fe)
         N.append(c)
         E.append(100)
         xn.append(x)
-        while E[c]>Tol and fe!=0 and c<Niter:
+        while E[c] > Tol and fe != 0 and c < Niter:
             a.append(Xi)
             b.append(Xs)
-            if fi*fe<0:
-                Xs=Xm
-                x=Xs
-                fs=eval(Fun)
+            if fi * fe < 0:
+                Xs = Xm
+                x = Xs
+                fs = eval(Fun)
             else:
-                Xi=Xm
-                x=Xi
-                fs=eval(Fun)
-            Xa=Xm
-            Xm=(Xi+Xs)/2
-            x=Xm
-            fe=eval(Fun)
+                Xi = Xm
+                x = Xi
+                fs = eval(Fun)
+            Xa = Xm
+            Xm = (Xi + Xs) / 2
+            x = Xm
+            fe = eval(Fun)
             fm.append(fe)
             xn.append(x)
-            Error=abs(Xm-Xa)
+            Error = abs(Xm - Xa)
             E.append(Error)
-            c=c+1
+            c = c + 1
             N.append(c)
         a.append(Xi)
         b.append(Xs)
-        if fe==0:
-            s=x
-            res2 = (s,"es raiz de f(x)")
-        elif Error<Tol:
-            s=x
-            res2 = (s,"es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
+        if fe == 0:
+            s = x
+            res2 = (s, "es raiz de f(x)")
+        elif Error < Tol:
+            s = x
+            res2 = (s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
         else:
-            s=x
-            res2 = ("Fracaso en ",Niter, " iteraciones")
+            s = x
+            res2 = ("Fracaso en ", Niter, " iteraciones")
     else:
-        res2=("El intervalo es inadecuado")
+        res2 = "El intervalo es inadecuado"
 
     for i in range(0, len(N)):
-        res.append([N[i], a[i],xn[i],b[i], fm[i], E[i]])
+        res.append([N[i], a[i], xn[i], b[i], fm[i], E[i]])
     return res, res2
 
 
@@ -125,7 +127,7 @@ def regla_falsa(f, x_lower, x_upper, tol, max_iterations, t_error):
         fx = fun_false(x, f)
         iteration = 1
         error = tol + 1
-        results.append([iteration, x_lower, x_upper, x, fx, float('nan')])
+        results.append([iteration, x_lower, x_upper, x, fx, float("nan")])
         while fx != 0 and error > tol and iteration < max_iterations:
             if fx_lower * fx < 0:
                 x_upper = x
@@ -144,83 +146,112 @@ def regla_falsa(f, x_lower, x_upper, tol, max_iterations, t_error):
             results.append([iteration, x_lower, x_upper, x, fx, error])
         if fx == 0:
             return results, f"{x} es raíz"
-        
+
         elif error <= tol:
             return results, f"{x} se aproxima a una raíz con una tolerancia de {tol}"
-        
+
         else:
             return results, "Se alcanzó el número máximo de iteraciones"
     else:
         return [], "El intervalo es inadecuado"
-    
+
+
 def fun_false(x, expression):
     result = eval(expression)
     return result
 
+
 def fixed_point(f, g, x0, tol, max_iterations):
     results = []
     x = x0
-    fx = fun_fijo(x,f)
+    fx = fun_fijo(x, f)
     iteration = 0
     error = tol + 1
-    results.append([iteration, x, fx, g_fun_fijo(x, g), float('nan')])
+    results.append([iteration, x, fx, g_fun_fijo(x, g), float("nan")])
     while fx != 0 and error > tol and iteration < max_iterations:
         x = g_fun_fijo(x, g)
-        fx = fun_fijo(x,f)
+        fx = fun_fijo(x, f)
         error = abs(results[-1][1] - x)
         iteration += 1
-        results.append([iteration, x, fx,g_fun_fijo(x, g), error])
+        results.append([iteration, x, fx, g_fun_fijo(x, g), error])
     if fx == 0:
         return results, f"{x} es raíz"
     elif error <= tol:
         return results, f"{x} se aproxima a una raíz con una tolerancia de {tol}"
     else:
         return results, "Se alcanzó el número máximo de iteraciones"
-    
+
+
 def fun_fijo(x, expression):
     result = sym.simplify(expression)
-    substituted = result.subs('x', x)
+    substituted = result.subs("x", x)
     return substituted
+
 
 def g_fun_fijo(x, expression):
     result = sym.simplify(expression)
-    substituted = result.subs('x', x)
+    substituted = result.subs("x", x)
     return substituted
+
 
 def newton_raphson(f, df, x0, tol, max_iterations):
-        results = []
-        x = x0
-        fx = eval_f(f,x)
-        dfx = eval_df(df,x)
-        iteration = 0
-        error = tol + 1
-        results.append([iteration, '{:.10f}'.format(x), '{:.1e}'.format(fx).replace('e-0', 'e-'),'NaN'])
-        while fx != 0 and dfx != 0 and error > tol and iteration < max_iterations:
-            x_prev = x
-            x -= fx / dfx
-            fx = eval_f(f,x)
-            dfx = eval_df(df,x)
-            error = abs(x_prev - x)
-            iteration += 1
-            results.append([iteration, '{:.10f}'.format(x), '{:.1e}'.format(fx).replace('e-0', 'e-'), '{:.1e}'.format(error).replace('e-0', 'e-')])
-        if fx == 0:
-            return results,
-        elif error <= tol:
-            util="An approximation of the roof was found for x"+str(len(results)-1)+" "+str(results[-1][1])
-            return results, util
-        else:
-            return results, "Given the number of iterations and the tolerance, it was impossible to find a satisfying root"
-        
-def eval_f(f,x):
+    results = []
+    x = x0
+    fx = eval_f(f, x)
+    dfx = eval_df(df, x)
+    iteration = 0
+    error = tol + 1
+    results.append(
+        [
+            iteration,
+            "{:.10f}".format(x),
+            "{:.1e}".format(fx).replace("e-0", "e-"),
+            "NaN",
+        ]
+    )
+    while fx != 0 and dfx != 0 and error > tol and iteration < max_iterations:
+        x_prev = x
+        x -= fx / dfx
+        fx = eval_f(f, x)
+        dfx = eval_df(df, x)
+        error = abs(x_prev - x)
+        iteration += 1
+        results.append(
+            [
+                iteration,
+                "{:.10f}".format(x),
+                "{:.1e}".format(fx).replace("e-0", "e-"),
+                "{:.1e}".format(error).replace("e-0", "e-"),
+            ]
+        )
+    if fx == 0:
+        return (results,)
+    elif error <= tol:
+        util = (
+            "An approximation of the roof was found for x"
+            + str(len(results) - 1)
+            + " "
+            + str(results[-1][1])
+        )
+        return results, util
+    else:
+        return (
+            results,
+            "Given the number of iterations and the tolerance, it was impossible to find a satisfying root",
+        )
+
+
+def eval_f(f, x):
     result = sym.simplify(f)
-    substituted = result.subs('x', x)
+    substituted = result.subs("x", x)
     return substituted
 
-def eval_df(f,x):
+
+def eval_df(f, x):
     result = sym.simplify(f)
-    substituted = result.subs('x', x)
+    substituted = result.subs("x", x)
     return substituted
-        
+
 
 def secante(x0, x1, f, tol, niter):
     X0 = x0
@@ -229,7 +260,7 @@ def secante(x0, x1, f, tol, niter):
     Niter = niter
     Fun = f
     res = []
-    res2= 'nan'
+    res2 = "nan"
     fn = []
     xn = []
     E = []
@@ -269,7 +300,6 @@ def secante(x0, x1, f, tol, niter):
         s = x
         res2 = ("Fracaso en ", Niter, " iteraciones ")
 
-
     for i in range(0, len(N)):
         res.append([N[i], xn[i], fn[i], E[i]])
     for i in res:
@@ -286,7 +316,7 @@ def multiple_roots(x0, f, df, df2, tol, niter):
     # print("derivate Function df:")
     df = df
     df2 = df2
-    res2= 'nan'
+    res2 = "nan"
     fn = []
     xn = []
     E = []
@@ -294,7 +324,7 @@ def multiple_roots(x0, f, df, df2, tol, niter):
     x = X0
     d1 = []
     d2 = []
-    res= []
+    res = []
     # f=eval(Fun)
     # derivada=eval(df)
     # derivada2=eval(df2)
@@ -314,7 +344,7 @@ def multiple_roots(x0, f, df, df2, tol, niter):
     N.append(c)
 
     while Error > Tol and derivada != 0 and c < Niter:
-        arriba = (f * derivada)
+        arriba = f * derivada
         abajo = ((derivada) ** 2) - ((f) * (derivada2))
         x = x - (arriba / abajo)
         # derivada=eval(df)
@@ -364,14 +394,12 @@ def simple_gauss(a, b, s):
             for k in range(i, size + 1):
                 ab[j][k] = ab[j][k] - (multiplier * ab[i][k])
         res.append(np.copy(ab).tolist())
-    
-    return res
 
+    return res
 
 
 def to_aug(a, b):
     return np.column_stack((a, b))
-
 
 
 def regressive_substitution(ab, labels=None):
@@ -498,12 +526,12 @@ def total_pivot(ab, k, labels):
 def lu_gauss(a, b):
     assert a.shape[0] == a.shape[1]
     assert a.shape[0] == b.shape[0]
-    res=[]
+    res = []
     size = a.shape[0]
-    #U
-    #L
+    # U
+    # L
     lower_tri = np.identity(size, dtype=np.float64)
-    #a = M
+    # a = M
     # Stages
     for k in range(0, size - 1):
         # Compute multiplier for row in stage.
@@ -515,7 +543,7 @@ def lu_gauss(a, b):
                     lower_tri[i][j] = multiplier
         u = np.copy(a)
         aux = k
-        for i in range(aux +2 , size ):
+        for i in range(aux + 2, size):
             u[i] = 0
         res.append([u.tolist(), np.copy(lower_tri).tolist(), np.copy(a).tolist()])
     z = progressive_substitution(to_aug(lower_tri, b))
@@ -524,25 +552,25 @@ def lu_gauss(a, b):
 
 def LU_partial_decomposition(A, B):
     n, m = A.shape
-    P    = np.identity(n)
-    L    = np.identity(n)
-    U    = A.copy()
-    PF   = np.identity(n)
-    LF   = np.zeros((n,n))
+    P = np.identity(n)
+    L = np.identity(n)
+    U = A.copy()
+    PF = np.identity(n)
+    LF = np.zeros((n, n))
     for k in range(0, n - 1):
         index = np.argmax(abs(U[k:, k]))
-        index = index + k 
+        index = index + k
         if index != k:
             P = np.identity(n)
             P[[index, k], k:n] = P[[k, index], k:n]
-            U[[index, k], k:n] = U[[k, index], k:n] 
+            U[[index, k], k:n] = U[[k, index], k:n]
             PF = np.dot(P, PF)
             LF = np.dot(P, LF)
         L = np.identity(n)
-        for j in range(k+1,n):
-            L[j, k]  = -(U[j, k] / U[k, k])
-            LF[j, k] =  (U[j, k] / U[k, k])
-        U = np.dot(L,U)
+        for j in range(k + 1, n):
+            L[j, k] = -(U[j, k] / U[k, k])
+            LF[j, k] = U[j, k] / U[k, k]
+        U = np.dot(L, U)
     np.fill_diagonal(LF, 1)
 
     """ # Sustitución progresiva
@@ -559,15 +587,15 @@ def LU_partial_decomposition(A, B):
         for j in range(i, n):
             sum += U[i,j]*B[j]
         B[i] = B[i]/U[i,i] """
-    for i in range(L.shape[0]): 
+    for i in range(L.shape[0]):
         for j in range(i):
-            B[i] -= L[i,j]*B[j]
+            B[i] -= L[i, j] * B[j]
     # Sustitución regresiva
-    for i in range(U.shape[0]-1,-1,-1): 
-        for j in range(i+1, U.shape[1]):
-            B[i] -= U[i,j]*B[j]
-        B[i] = B[i]/U[i,i]
-    
+    for i in range(U.shape[0] - 1, -1, -1):
+        for j in range(i + 1, U.shape[1]):
+            B[i] -= U[i, j] * B[j]
+        B[i] = B[i] / U[i, i]
+
     return PF, LF, U, B
 
 
@@ -594,7 +622,7 @@ def crout(a, b):
             for p in range(0, k):
                 sum2 += lower_tri[k][p] * upper_tri[p][j]
             upper_tri[k][j] = (a[k][j] - sum2) / lower_tri[k][k]
-        res.append([np.copy(upper_tri),np.copy(lower_tri)])
+        res.append([np.copy(upper_tri), np.copy(lower_tri)])
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(upper_tri, z))
 
@@ -624,7 +652,7 @@ def dolittle_fac(a, b):
             for p in range(0, k):
                 third_sum += lower_tri[k][p] * upper_tri[p][j]
             upper_tri[k][j] = a[k][j] - third_sum
-        res.append([np.copy(upper_tri),np.copy(lower_tri)])
+        res.append([np.copy(upper_tri), np.copy(lower_tri)])
 
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(upper_tri, z))
@@ -765,159 +793,167 @@ def next_iter2(a, b, prev_x):
     return x, abs_err, rel_err
 
 
-def sor(A,x0,b,Tol,niter,w):
-    c=0
+def sor(A, x0, b, Tol, niter, w):
+    c = 0
     E = []
     resultado = []
-    error=Tol+1
+    error = Tol + 1
     E.append(error)
     D = np.diagonal(A) * np.identity(len(x0))
-    L = -np.tril(A,-1)
-    U = -np.triu(A,+1)
-    resultado.append([c,x0,error])
-    while error>Tol and c<niter:
-        T = np.dot(np.linalg.inv(D-(w*L)),((1-w)*D+(w*U)))
-        C = w * np.dot(np.linalg.inv(D-w*L),b)
-        x1=np.dot(T,x0)+C
-        E.append(np.linalg.norm(x1-x0))
-        error=E[c]
-        x0=x1
-        c=c+1
-        resultado.append([c,x0.tolist(),error])
+    L = -np.tril(A, -1)
+    U = -np.triu(A, +1)
+    resultado.append([c, x0, error])
+    while error > Tol and c < niter:
+        T = np.dot(np.linalg.inv(D - (w * L)), ((1 - w) * D + (w * U)))
+        C = w * np.dot(np.linalg.inv(D - w * L), b)
+        x1 = np.dot(T, x0) + C
+        E.append(np.linalg.norm(x1 - x0))
+        error = E[c]
+        x0 = x1
+        c = c + 1
+        resultado.append([c, x0.tolist(), error])
         if error < Tol:
-            s=x0
-            n=c
-            return [resultado, "Solucion al sistema con una tolerancia de "+str(Tol)+" es "+str(s)]
-    s=x0
-    n=c
-    return [resultado, "Fracasó"+str(niter)]
+            s = x0
+            n = c
+            return [
+                resultado,
+                "Solucion al sistema con una tolerancia de "
+                + str(Tol)
+                + " es "
+                + str(s),
+            ]
+    s = x0
+    n = c
+    return [resultado, "Fracasó" + str(niter)]
 
 
-def vandermonde_method(x,y):
-        matrix = []
-        coeficientes = []
-        xn = np.array(x)
-        yn = np.array([y]).T
-        A = np.vander(xn)
-        Ainv = np.linalg.inv(A)
-        a = np.dot(Ainv, yn)
-        matrix = A
-        coeficientes = a
-        return {'matrix': (matrix), 'coeficients':(coeficientes)}
+def vandermonde_method(x, y):
+    matrix = []
+    coeficientes = []
+    xn = np.array(x)
+    yn = np.array([y]).T
+    A = np.vander(xn)
+    Ainv = np.linalg.inv(A)
+    a = np.dot(Ainv, yn)
+    matrix = A
+    coeficientes = a
+    return {"matrix": (matrix), "coeficients": (coeficientes)}
 
 
-def newton_interpolacion(x,y):
-    n=len(y)
-    Tabla=np.zeros([n,n])
-    Tabla[:,0]=y
-    for j in range(1,n):
-            for i in range(n-j):
-                Tabla[i][j] =  (Tabla[i+1][j-1] - Tabla[i][j-1]) / (x[i+j]-x[i])
-    return {'table':(Tabla).tolist(),'coef':(Tabla[0]).tolist()}
+def newton_interpolacion(x, y):
+    n = len(y)
+    Tabla = np.zeros([n, n])
+    Tabla[:, 0] = y
+    for j in range(1, n):
+        for i in range(n - j):
+            Tabla[i][j] = (Tabla[i + 1][j - 1] - Tabla[i][j - 1]) / (x[i + j] - x[i])
+    return {"table": (Tabla).tolist(), "coef": (Tabla[0]).tolist()}
 
 
-def spline(x,y,d):
-    n=len(x)
-    A=np.zeros([(d+1)*(n-1),(d+1)*(n-1)] )
-    b=np.zeros([(d+1)*(n-1),1])
-    cua= []
-    for i in range(0,len(x)):cua.append(x[i]*x[i])
-    cub=[]
-    for i in range(0,len(x)):cub.append(x[i]*x[i]*x[i])
-    if d==1:
-        c=0
-        h=0
-        for i in range(0,n-1):
-            A[i,c]=x[i]
-            A[i,c+1]=1
-            b[i]=y[i]
-            c=c+2
-            h=h+1
-        c=0
-        for i in range(1,n):
-            A[h,c]=x[i]
-            A[h,c+1]=1
-            b[h]=y[i]
-            c=c+2
-            h=h+1
-    elif d==2:
-        c=0
-        h=0
-        for i in range(0,n-1):
-            A[i,c]=cua[i]
-            A[i,c+1]=x[i]
-            A[i,c+2]=1
-            b[i]=y[i]
-            c=c+3
-            h=h+1
-        c=0
-        for i in range(1,n):
-            A[h,c]=cua[i]
-            A[h,c+1]=x[i]
-            A[h,c+2]=1
-            b[h]=y[i]
-            c=c+3
-            h=h+1
-        c=0
-        for i in range(1,n-1):
-            A[h,c]=2*x[i]
-            A[h,c+1]=1
-            A[h,c+3]=-2*x[i]
-            A[h,c+4]=-1
-            b[h]=0
-            c=c+4
-            h=h+1
-        A[h,0]=2
-        b[h]=0
-    elif d==3:
-        c=0
-        h=0
-        for i in range(0,n-1):
-            A[i,c]=cub[i]
-            A[i,c+1]=cua[i]
-            A[i,c+2]=x[i]
-            A[i,c+3]=1
-            b[i]=y[i]
-            c=c+4
-            h=h+1
-        c=0
-        for i in range(1,n):
-            A[h,c]=cub[i]
-            A[h,c+1]=cua[i]
-            A[h,c+2]=x[i]
-            A[h,c+3]=1
-            b[h]=y[i]
-            c=c+4
-            h=h+1
-        c=0
-        for i in range(1,n-1):
-            A[h,c]=3*cua[i]
-            A[h,c+1]=2*x[i]
-            A[h,c+2]=1
-            A[h,c+4]=-3*cua[i]
-            A[h,c+5]=-2*x[i]
-            A[h,c+6]=-1
-            b[h]=0
-            c=c+4
-            h=h+1
-        c=0
-        for i in range(1,n-1):
-            A[h,c]=6*x[i]
-            A[h,c+1]=2
-            A[h,c+4]=-6*x[i]
-            A[h,c+5]=-2
-            b[h]=0
-            c=c+4
-            h=h+1
-        A[h,0]=6*x[1]
-        A[h,1]=2
-        b[h]=0
-        h=h+1
-        A[h,c]=6*x[n-1]
-        A[h,c+1]=2
-        b[h]=0
-    val=np.linalg.inv(A).dot(b)
-    Tabla=np.reshape(val,(n-1,d+1))
+def spline(x, y, d):
+    n = len(x)
+    A = np.zeros([(d + 1) * (n - 1), (d + 1) * (n - 1)])
+    b = np.zeros([(d + 1) * (n - 1), 1])
+    cua = []
+    for i in range(0, len(x)):
+        cua.append(x[i] * x[i])
+    cub = []
+    for i in range(0, len(x)):
+        cub.append(x[i] * x[i] * x[i])
+    if d == 1:
+        c = 0
+        h = 0
+        for i in range(0, n - 1):
+            A[i, c] = x[i]
+            A[i, c + 1] = 1
+            b[i] = y[i]
+            c = c + 2
+            h = h + 1
+        c = 0
+        for i in range(1, n):
+            A[h, c] = x[i]
+            A[h, c + 1] = 1
+            b[h] = y[i]
+            c = c + 2
+            h = h + 1
+    elif d == 2:
+        c = 0
+        h = 0
+        for i in range(0, n - 1):
+            A[i, c] = cua[i]
+            A[i, c + 1] = x[i]
+            A[i, c + 2] = 1
+            b[i] = y[i]
+            c = c + 3
+            h = h + 1
+        c = 0
+        for i in range(1, n):
+            A[h, c] = cua[i]
+            A[h, c + 1] = x[i]
+            A[h, c + 2] = 1
+            b[h] = y[i]
+            c = c + 3
+            h = h + 1
+        c = 0
+        for i in range(1, n - 1):
+            A[h, c] = 2 * x[i]
+            A[h, c + 1] = 1
+            A[h, c + 3] = -2 * x[i]
+            A[h, c + 4] = -1
+            b[h] = 0
+            c = c + 4
+            h = h + 1
+        A[h, 0] = 2
+        b[h] = 0
+    elif d == 3:
+        c = 0
+        h = 0
+        for i in range(0, n - 1):
+            A[i, c] = cub[i]
+            A[i, c + 1] = cua[i]
+            A[i, c + 2] = x[i]
+            A[i, c + 3] = 1
+            b[i] = y[i]
+            c = c + 4
+            h = h + 1
+        c = 0
+        for i in range(1, n):
+            A[h, c] = cub[i]
+            A[h, c + 1] = cua[i]
+            A[h, c + 2] = x[i]
+            A[h, c + 3] = 1
+            b[h] = y[i]
+            c = c + 4
+            h = h + 1
+        c = 0
+        for i in range(1, n - 1):
+            A[h, c] = 3 * cua[i]
+            A[h, c + 1] = 2 * x[i]
+            A[h, c + 2] = 1
+            A[h, c + 4] = -3 * cua[i]
+            A[h, c + 5] = -2 * x[i]
+            A[h, c + 6] = -1
+            b[h] = 0
+            c = c + 4
+            h = h + 1
+        c = 0
+        for i in range(1, n - 1):
+            A[h, c] = 6 * x[i]
+            A[h, c + 1] = 2
+            A[h, c + 4] = -6 * x[i]
+            A[h, c + 5] = -2
+            b[h] = 0
+            c = c + 4
+            h = h + 1
+        A[h, 0] = 6 * x[1]
+        A[h, 1] = 2
+        b[h] = 0
+        h = h + 1
+        A[h, c] = 6 * x[n - 1]
+        A[h, c + 1] = 2
+        b[h] = 0
+    val = np.linalg.inv(A).dot(b)
+    Tabla = np.reshape(val, (n - 1, d + 1))
     return Tabla.tolist()
 
 
@@ -932,14 +968,14 @@ def lagrange(puntos):
         l = 1
         for i in range(size):
             if i != k:
-                l = l * ((x - arreglo_x[i]) / (arreglo_x[k] - arreglo_x[i])) 
-        ls.append(l)    
+                l = l * ((x - arreglo_x[i]) / (arreglo_x[k] - arreglo_x[i]))
+        ls.append(l)
         producto = producto + l * (arreglo_y[k])
     producto = sym.simplify(sym.expand(producto))
     return producto, ls
 
 
-simple_gauss([[1,2,3],[4,5,6],[7,8,10]],[1,-2,5],3)
+simple_gauss([[1, 2, 3], [4, 5, 6], [7, 8, 10]], [1, -2, 5], 3)
 
 biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
 regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
