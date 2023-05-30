@@ -957,12 +957,13 @@ def spline(x, y, d):
     return Tabla.tolist()
 
 
-def lagrange(puntos):
+def lagrange(arreglo_x, arreglo_y):
+    puntos=[]
+    puntos.append(arreglo_x)
+    puntos.append(arreglo_y)
     x = sym.Symbol("x")
     size = np.size(puntos, 0)
     producto = 0
-    arreglo_x = [i[0] for i in puntos]
-    arreglo_y = [i[1] for i in puntos]
     ls = []
     for k in range(size):
         l = 1
@@ -975,7 +976,6 @@ def lagrange(puntos):
     return producto, ls
 
 
-simple_gauss([[1, 2, 3], [4, 5, 6], [7, 8, 10]], [1, -2, 5], 3)
-
-biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
-regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
+#simple_gauss([[1, 2, 3], [4, 5, 6], [7, 8, 10]], [1, -2, 5], 3)
+#biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
+#regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
