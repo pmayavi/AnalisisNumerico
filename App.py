@@ -953,6 +953,67 @@ ni_button = tk.Button(
     ),
 )
 
+# ---- spline Screen ----
+spline = tk.Frame(window, bg=main_bg)
+
+tk.Label(
+    spline,
+    text="Método de Splines",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+).pack(pady=20)
+
+tk.Label(
+    spline,
+    text="Valor de d:",
+    font=(font, size),
+    bg=main_bg,
+).pack(pady=20)
+
+s_entry = tk.Entry(spline, font=(font, size1))
+s_entry.pack(pady=20)
+
+s_button = tk.Button(
+    spline,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.spline,
+        (
+            get_x_values(),
+            get_y_values(),
+            float(s_entry.get()),
+        ),
+    ),
+)
+
+# ---- lagrange Screen ----
+lagrange = tk.Frame(window, bg=main_bg)
+
+tk.Label(
+    lagrange,
+    text="Método de Interpolacion de Newton",
+    font=(font, size2, "bold"),
+    bg=main_bg,
+).pack(pady=20)
+
+
+l_button = tk.Button(
+    lagrange,
+    text="Resolver",
+    font=(font, size1),
+    bg=button_bg,
+    command=lambda: show_result(
+        methods.lagrange,
+        (
+            get_x_values(),
+            get_y_values(),
+        ),
+    ),
+)
+
+
 # Define button information
 button_info = [
     ("Método de Búsqueda Incremental", switch_screen, incremental_search, None),
@@ -973,12 +1034,9 @@ button_info = [
     ("Método de Seidel", get_matrix, seidel, se_button),
     ("Método de Jacobi", get_matrix, jacobi, j_button),
     ("Método de Vandermonde", create_points, vandermonde_method, v_button),
-    (
-        "Método de Interpolacion de Newton",
-        create_points,
-        newton_interpolacion,
-        ni_button,
-    ),
+    ("Método de Interpolacion Newton", create_points, newton_interpolacion, ni_button),
+    ("Método de Splines", create_points, spline, s_button),
+    ("Método de Lagrange", create_points, lagrange, l_button),
 ]
 
 # ---- Main Screen ----
