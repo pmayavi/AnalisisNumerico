@@ -364,13 +364,11 @@ def progressive_substitution(ab):
         solutions[i] = (ab[i][size] - accum) / ab[i][i]
     return solutions
 
-def gauss_partial_pivot(a, b):
+def gauss_partial_pivot(a, b, s):
     ab = to_aug(a, b)
-    assert a.shape[0] == a.shape[1]
     res = []
     res.append(np.copy(ab).tolist())
-    size = a.shape[0]
-
+    size = s
     # Stages
     for k in range(0, size - 1):
         partial_pivot(ab, k)
@@ -382,14 +380,12 @@ def gauss_partial_pivot(a, b):
         res.append(np.copy(ab).tolist())
     return res
 
-def gauss_total_pivot(a, b):
+def gauss_total_pivot(a, b, s):
     ab = to_aug(a, b)
-    assert a.shape[0] == a.shape[1]
     res = []
     res.append(np.copy(ab).tolist())
-    size = a.shape[0]
+    size = s
     labels = list(range(0, size))
-
     # Stages
     for k in range(0, size - 1):
         total_pivot(ab, k, labels)
@@ -441,11 +437,9 @@ def total_pivot(ab, k, labels):
             ab[:, [k, largest_column]] = ab[:, [largest_column, k]]
             labels[k], labels[largest_column] = labels[largest_column], labels[k]
 
-def lu_gauss(a, b):
-    assert a.shape[0] == a.shape[1]
-    assert a.shape[0] == b.shape[0]
+def lu_gauss(a, b, s):
     res = []
-    size = a.shape[0]
+    size = s
     # U
     # L
     lower_tri = np.identity(size, dtype=np.float64)
@@ -467,7 +461,9 @@ def lu_gauss(a, b):
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(a, z))
 
-def LU_partial_decomposition(A, B):
+def LU_partial_decomposition(a, b):
+    A=np.array(a)
+    B=np.array(b)
     n, m = A.shape
     P = np.identity(n)
     L = np.identity(n)
@@ -489,21 +485,6 @@ def LU_partial_decomposition(A, B):
             LF[j, k] = U[j, k] / U[k, k]
         U = np.dot(L, U)
     np.fill_diagonal(LF, 1)
-
-    """ # Sustitución progresiva
-    Z, x = [], []
-    sum = 0
-    for i in range(n):
-        sum = 0
-        for j in range(i):
-            sum += L[i,j]*B[j]
-        Z.append((B[i] - sum) / L[i, i])
-    # Sustitución regresiva
-    for i in range(U.shape[0]-1,-1,-1): 
-        sum = 0
-        for j in range(i, n):
-            sum += U[i,j]*B[j]
-        B[i] = B[i]/U[i,i] """
     for i in range(L.shape[0]):
         for j in range(i):
             B[i] -= L[i, j] * B[j]
@@ -881,6 +862,7 @@ def lagrange(arreglo_x, arreglo_y):
     return producto, ls
 
 
-#simple_gauss([[1, 2, 3], [4, 5, 6], [7, 8, 10]], [1, -2, 5], 3)
+LU_partial_decomposition([[2,-1,0,3], [1,0.5,3,8], [0,13,-2,11],[14,5,-2,3]], [1,1,1,1])
+print("Hola")
 #biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
 #regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
