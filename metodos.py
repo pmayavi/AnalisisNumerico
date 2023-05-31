@@ -304,12 +304,12 @@ def multiple_roots(f, df, df2, x0, tol, max_iterations):
     else:
         return results, "Given the number of iterations and the tolerance, it was impossible to find a satisfying root"
 
-def simple_gauss(a, b, s):
+def simple_gauss(a, b):
     ab = to_aug(a, b)
     res = []
     res.append(np.copy(ab).tolist())
 
-    size = s
+    size = len(a)
 
     # Stages
 
@@ -364,11 +364,11 @@ def progressive_substitution(ab):
         solutions[i] = (ab[i][size] - accum) / ab[i][i]
     return solutions
 
-def gauss_partial_pivot(a, b, s):
+def gauss_partial_pivot(a, b):
     ab = to_aug(a, b)
     res = []
     res.append(np.copy(ab).tolist())
-    size = s
+    size = len(a)
     # Stages
     for k in range(0, size - 1):
         partial_pivot(ab, k)
@@ -380,11 +380,11 @@ def gauss_partial_pivot(a, b, s):
         res.append(np.copy(ab).tolist())
     return res
 
-def gauss_total_pivot(a, b, s):
+def gauss_total_pivot(a, b):
     ab = to_aug(a, b)
     res = []
     res.append(np.copy(ab).tolist())
-    size = s
+    size = len(a)
     labels = list(range(0, size))
     # Stages
     for k in range(0, size - 1):
@@ -395,7 +395,6 @@ def gauss_total_pivot(a, b, s):
             for j in range(k, size + 1):
                 ab[i][j] = ab[i][j] - (multiplier * ab[k][j])
         res.append(np.copy(ab).tolist())
-
     return res, labels
 
 def partial_pivot(ab, k):
@@ -437,9 +436,9 @@ def total_pivot(ab, k, labels):
             ab[:, [k, largest_column]] = ab[:, [largest_column, k]]
             labels[k], labels[largest_column] = labels[largest_column], labels[k]
 
-def lu_gauss(a, b, s):
+def lu_gauss(a, b):
     res = []
-    size = s
+    size = len(a)
     # U
     # L
     lower_tri = np.identity(size, dtype=np.float64)
@@ -461,9 +460,7 @@ def lu_gauss(a, b, s):
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(a, z))
 
-def LU_partial_decomposition(a, b):
-    A=np.array(a)
-    B=np.array(b)
+def LU_partial_decomposition(A, B):
     n, m = A.shape
     P = np.identity(n)
     L = np.identity(n)
@@ -495,9 +492,7 @@ def LU_partial_decomposition(a, b):
         B[i] = B[i] / U[i, i]
     return PF, LF, U, B
 
-def crout(A, B):
-    a=np.array(A)
-    b=np.array(B)
+def crout(a, b):
     n = a.shape[0]
     lower_tri = np.identity(n, dtype=np.float64)
     upper_tri = np.identity(n, dtype=np.float64)
@@ -524,28 +519,21 @@ def crout(A, B):
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(upper_tri, z))
 
-def dolittle_fac(A, B):
-    a=np.array(A)
-    b=np.array(B)
+def dolittle_fac(a, b):
     size = a.shape[0]
     lower_tri = np.identity(size, dtype=np.float64)
     upper_tri = np.identity(size, dtype=np.float64)
     res = []
     for k in range(0, size):
         first_sum = 0
-        # Compute lower_tri[k][k]
         for p in range(0, k):
             first_sum += lower_tri[k][p] * upper_tri[p][k]
         upper_tri[k][k] = a[k][k] - first_sum
-
-        # Compute lower_tri[i][k]
         for i in range(k + 1, size):
             second_sum = 0
             for p in range(0, k):
                 second_sum += lower_tri[i][p] * upper_tri[p][k]
             lower_tri[i][k] = (a[i][k] - second_sum) / upper_tri[k][k]
-
-        # Compute upper_tri[k][j]
         for j in range(k + 1, size):
             third_sum = 0
             for p in range(0, k):
@@ -588,34 +576,25 @@ def cholesky_factorization(a, b):
 
 def seidel(a, b, init, tol, n, err_type="abs"):
     table = []
-    assert a.shape[0] == a.shape[1]
-    assert a.shape[0] == len(b)
-    assert len(init) == len(b)
     res = []
     error = float("inf")
     xn = init
     i = 0
-
     table.append(i)
     table.append(xn)
     table.append("")
     table.append("")
     table.append("newline")
     res.append([i, xn.tolist(), "nan"])
-
     while error > tol and i < n:
         x, abs_err, rel_err = next_iter(a, b, xn)
         xn = x
-
         if err_type == "rel":
             error = rel_err
         else:
             error = abs_err
-
         i += 1
-
         res.append([i, xn.tolist(), abs_err])
-
     return xn, res
 
 def next_iter(a, b, prev_x):
@@ -865,7 +844,7 @@ def lagrange(arreglo_x, arreglo_y):
     return producto, ls
 
 
-vari1, vari2=crout([[4,-1,0,3], [1,15.5,3,8], [0,-1.3,-4,1.1],[14,5,-2,30]], [1,1,1,1])
+vari1, vari2=seidel([[4,-1,0,3], [1,15.5,3,8], [0,-1.3,4,1.1],[14,5,-2,30]], [1,1,1,1],[0,0,0,0],0.0000001,100)
 print("Hola")
 #biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
 #regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
