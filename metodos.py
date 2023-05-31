@@ -3,6 +3,7 @@ import numpy as np
 import math
 import sympy as sym
 
+
 def incremental_search(f, x_init, delta_x, num_iterations):
     intervals = []
     message = []
@@ -23,16 +24,18 @@ def incremental_search(f, x_init, delta_x, num_iterations):
         util = "Se encontraron intervalos en los que f(x) cambia de signo"
     else:
         util = "No se encontraron intervalos en los que f(x) cambia de signo en el número máximo de iteraciones"
+    message.append(util)
     for i, interval in enumerate(intervals):
         message.append(f"Intervalo {i+1}: {interval}")
     print(util)
-    message.append(util)
     return message
+
 
 def fun(x, expression):
     result = sym.simplify(expression)
     substituted = result.subs("x", x)
     return substituted
+
 
 def biseccion(f, xi, xs, tol, niter):
     Xi = xi
@@ -110,6 +113,7 @@ def biseccion(f, xi, xs, tol, niter):
         res.append([N[i], a[i], xn[i], b[i], fm[i], E[i]])
     return res, res2
 
+
 def regla_falsa(f, x_lower, x_upper, tol, max_iterations, t_error):
     results = []
     fx_lower = fun_false(x_lower, f)
@@ -151,9 +155,11 @@ def regla_falsa(f, x_lower, x_upper, tol, max_iterations, t_error):
     else:
         return [], "El intervalo es inadecuado"
 
+
 def fun_false(x, expression):
     result = eval(expression)
     return result
+
 
 def fixed_point(f, g, x0, tol, max_iterations):
     results = []
@@ -175,15 +181,18 @@ def fixed_point(f, g, x0, tol, max_iterations):
     else:
         return results, "Se alcanzó el número máximo de iteraciones"
 
+
 def fun_fijo(x, expression):
     result = sym.simplify(expression)
     substituted = result.subs("x", x)
     return substituted
 
+
 def g_fun_fijo(x, expression):
     result = sym.simplify(expression)
     substituted = result.subs("x", x)
     return substituted
+
 
 def newton_raphson(f, df, x0, tol, max_iterations):
     results = []
@@ -231,33 +240,36 @@ def newton_raphson(f, df, x0, tol, max_iterations):
             "Given the number of iterations and the tolerance, it was impossible to find a satisfying root",
         )
 
+
 def eval_f(f, x):
     result = sym.simplify(f)
     substituted = result.subs("x", x)
     return substituted
+
 
 def eval_df(f, x):
     result = sym.simplify(f)
     substituted = result.subs("x", x)
     return substituted
 
+
 def secante(f, x0, x1, tol, max_iterations):
     results = []
-    fx0 = fun_secan(x0,f)
-    fx1 = fun_secan(x1,f)
+    fx0 = fun_secan(x0, f)
+    fx1 = fun_secan(x1, f)
     iteration = 0
     error = tol + 1
-    results.append([iteration, x0, fx0, float('nan')])
+    results.append([iteration, x0, fx0, float("nan")])
     iteration += 1
     results.append([iteration, x1, fx1, abs(x1 - x0)])
-    
+
     while fx1 != 0 and error > tol and iteration < max_iterations:
         x2 = x1 - fx1 * (x1 - x0) / (fx1 - fx0)
-        fx2 = fun_secan(x2,f)
+        fx2 = fun_secan(x2, f)
         error = abs(x2 - x1)
         iteration += 1
         results.append([iteration, x2, fx2, error])
-        
+
         x0 = x1
         fx0 = fx1
         x1 = x2
@@ -270,38 +282,58 @@ def secante(f, x0, x1, tol, max_iterations):
     else:
         return results, "Se alcanzó el número máximo de iteraciones"
 
+
 def fun_secan(x, expression):
     result = sym.simplify(expression)
-    substituted = result.subs('x', x)
+    substituted = result.subs("x", x)
     return substituted
+
 
 def multiple_roots(f, df, df2, x0, tol, max_iterations):
     results = []
-    valorX = {'x': x0}
+    valorX = {"x": x0}
     fx = eval(f, globals(), valorX)
     dfx = eval(df, globals(), valorX)
     df2x = eval(df2, globals(), valorX)
     iteration = 0
     error = tol + 1
-    results.append([iteration, '{:.10f}'.format(x0), '{:.1e}'.format(fx).replace('e-0', 'e-'), 'NaN'])
+    results.append(
+        [
+            iteration,
+            "{:.10f}".format(x0),
+            "{:.1e}".format(fx).replace("e-0", "e-"),
+            "NaN",
+        ]
+    )
     while fx != 0 and dfx != 0 and error > tol and iteration < max_iterations:
         numerator = fx * dfx
         denominator = dfx**2 - fx * df2x
         x1 = x0 - numerator / denominator
-        valorX['x'] = x1
+        valorX["x"] = x1
         fx = eval(f, globals(), valorX)
         dfx = eval(df, globals(), valorX)
         df2x = eval(df2, globals(), valorX)
         error = abs(x1 - x0)
         iteration += 1
-        results.append([iteration, '{:.10f}'.format(x1), '{:.1e}'.format(fx).replace('e-0', 'e-'),'{:.1e}'.format(error).replace('e-0', 'e-')])
+        results.append(
+            [
+                iteration,
+                "{:.10f}".format(x1),
+                "{:.1e}".format(fx).replace("e-0", "e-"),
+                "{:.1e}".format(error).replace("e-0", "e-"),
+            ]
+        )
         x0 = x1
     if fx == 0:
         return results, f"An approximation of the roof was found for m = {x0}"
     elif error <= tol:
         return results, f"An approximation of the roof was found for m = {x0}"
     else:
-        return results, "Given the number of iterations and the tolerance, it was impossible to find a satisfying root"
+        return (
+            results,
+            "Given the number of iterations and the tolerance, it was impossible to find a satisfying root",
+        )
+
 
 def simple_gauss(a, b):
     ab = to_aug(a, b)
@@ -322,8 +354,10 @@ def simple_gauss(a, b):
 
     return res
 
+
 def to_aug(a, b):
     return np.column_stack((a, b))
+
 
 def regressive_substitution(ab, labels=None):
     size = ab.shape[0]
@@ -348,6 +382,7 @@ def regressive_substitution(ab, labels=None):
 
     return solutions
 
+
 def progressive_substitution(ab):
     size = ab.shape[0]
     assert ab.shape[1] == size + 1
@@ -362,6 +397,7 @@ def progressive_substitution(ab):
 
         solutions[i] = (ab[i][size] - accum) / ab[i][i]
     return solutions
+
 
 def gauss_partial_pivot(a, b):
     ab = to_aug(a, b)
@@ -379,6 +415,7 @@ def gauss_partial_pivot(a, b):
         res.append(np.copy(ab).tolist())
     return res
 
+
 def gauss_total_pivot(a, b):
     ab = to_aug(a, b)
     res = []
@@ -394,7 +431,8 @@ def gauss_total_pivot(a, b):
             for j in range(k, size + 1):
                 ab[i][j] = ab[i][j] - (multiplier * ab[k][j])
         res.append(np.copy(ab).tolist())
-    return res, labels
+    return res  # , labels
+
 
 def partial_pivot(ab, k):
     largest = abs(ab[k][k])
@@ -411,6 +449,7 @@ def partial_pivot(ab, k):
     else:
         if largest_row != k:
             ab[[k, largest_row]] = ab[[largest_row, k]]
+
 
 def total_pivot(ab, k, labels):
     largest = abs(ab[k][k])
@@ -435,6 +474,7 @@ def total_pivot(ab, k, labels):
             ab[:, [k, largest_column]] = ab[:, [largest_column, k]]
             labels[k], labels[largest_column] = labels[largest_column], labels[k]
 
+
 def lu_gauss(a, b):
     res = []
     size = len(a)
@@ -458,6 +498,7 @@ def lu_gauss(a, b):
         res.append([u.tolist(), np.copy(lower_tri).tolist(), np.copy(a).tolist()])
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(a, z))
+
 
 def LU_partial_decomposition(A, B):
     n, m = A.shape
@@ -491,6 +532,7 @@ def LU_partial_decomposition(A, B):
         B[i] = B[i] / U[i, i]
     return PF, LF, U, B
 
+
 def crout(a, b):
     n = a.shape[0]
     lower_tri = np.identity(n, dtype=np.float64)
@@ -518,6 +560,7 @@ def crout(a, b):
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(upper_tri, z))
 
+
 def dolittle_fac(a, b):
     size = a.shape[0]
     lower_tri = np.identity(size, dtype=np.float64)
@@ -542,6 +585,7 @@ def dolittle_fac(a, b):
 
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(upper_tri, z))
+
 
 def cholesky_factorization(a, b):
     size = a.shape[0]
@@ -573,9 +617,11 @@ def cholesky_factorization(a, b):
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(upper_tri, z))
 
-def seidel(a, b, init, tol, n, err_type="abs"):
+
+def seidel(a, b, tol, n, err_type="abs"):
     table = []
     res = []
+    init = np.array([0] * len(b))
     error = float("inf")
     xn = init
     i = 0
@@ -596,6 +642,7 @@ def seidel(a, b, init, tol, n, err_type="abs"):
         res.append([i, xn.tolist(), abs_err])
     return xn, res
 
+
 def next_iter(a, b, prev_x):
     size = a.shape[0]
     x = np.copy(prev_x)
@@ -614,8 +661,10 @@ def next_iter(a, b, prev_x):
 
     return x, abs_err, rel_err
 
-def jacobi(a, b, init, tol, n, err_type="abs"):
+
+def jacobi(a, b, tol, n, err_type="abs"):
     table = []
+    init = np.array([0] * len(b))
     assert a.shape[0] == a.shape[1]
     assert a.shape[0] == len(b)
     assert len(init) == len(b)
@@ -646,6 +695,7 @@ def jacobi(a, b, init, tol, n, err_type="abs"):
         table.append("newline")
     return xn, res
 
+
 def next_iter2(a, b, prev_x):
     size = a.shape[0]
     x = np.zeros(size, dtype=np.float64)
@@ -663,6 +713,7 @@ def next_iter2(a, b, prev_x):
     rel_err = max(errs / abs(x))
 
     return x, abs_err, rel_err
+
 
 def sor(A, x0, b, Tol, niter, w):
     c = 0
@@ -697,6 +748,7 @@ def sor(A, x0, b, Tol, niter, w):
     n = c
     return [resultado, "Fracasó" + str(niter)]
 
+
 def vandermonde_method(x, y):
     matrix = []
     coeficientes = []
@@ -709,6 +761,7 @@ def vandermonde_method(x, y):
     coeficientes = a
     return {"matrix": (matrix), "coeficients": (coeficientes)}
 
+
 def newton_interpolacion(x, y):
     n = len(y)
     Tabla = np.zeros([n, n])
@@ -717,6 +770,7 @@ def newton_interpolacion(x, y):
         for i in range(n - j):
             Tabla[i][j] = (Tabla[i + 1][j - 1] - Tabla[i][j - 1]) / (x[i + j] - x[i])
     return {"table": (Tabla).tolist(), "coef": (Tabla[0]).tolist()}
+
 
 def spline(x, y, d):
     n = len(x)
@@ -824,8 +878,9 @@ def spline(x, y, d):
     Tabla = np.reshape(val, (n - 1, d + 1))
     return Tabla.tolist()
 
+
 def lagrange(arreglo_x, arreglo_y):
-    puntos=[]
+    puntos = []
     puntos.append(arreglo_x)
     puntos.append(arreglo_y)
     x = sym.Symbol("x")
@@ -843,7 +898,7 @@ def lagrange(arreglo_x, arreglo_y):
     return producto, ls
 
 
-vari1=spline([-2,-1,2,3],[12.1353,6.3678,-4.6109,2.08553],2)
-print("Hola")
-#biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
-#regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
+# vari1=spline([-2,-1,2,3],[12.1353,6.3678,-4.6109,2.08553],2)
+# print("Hola")
+# biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
+# regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)

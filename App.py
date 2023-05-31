@@ -43,33 +43,73 @@ def show_result(method, inputs):
         print(e)
     print(res)
 
-    if isinstance(res, tuple):
-        result_label.config(text=" ".join(str(item) for item in res[1]))
-        row = 0
-        c1 = main_bg
-        c2 = table_bg1
-        for iter in res[0][-10:]:
-            col = 0
-            color = c1
-            c1 = c2
-            c2 = color
-            for element in iter:
-                tk.Label(
-                    table_screen,
-                    text=str(round(element, 6)),
-                    font=(font, size),
-                    relief=tk.RIDGE,
-                    bg=color,
-                    borderwidth=10,
-                    highlightbackground=table_bg2,
-                    width=10,
-                ).grid(row=row, column=col, sticky="nsew")
-                col += 1
-            row += 1
-
-    else:
-        result_label.config(text=str(res))
+    try:
+        if isinstance(res, tuple):
+            if isinstance(res[1], list):
+                if isinstance(res[0], np.ndarray):
+                    result_label.config(
+                        text="\n".join(str(item) for item in res[0].tolist())
+                    )
+                else:
+                    result_label.config(text=" ".join(str(item) for item in res[1]))
+                    show_table(res[0][-10:])
+            elif isinstance(res[0][0][0], np.ndarray):
+                cont = 0
+                for row in res[0][-2:]:
+                    for col in row:
+                        show_table(col.tolist(), cont)
+                        cont += len(col.tolist()) + 1
+                        tk.Label(
+                            table_screen,
+                            bg=main_bg,
+                        ).grid(row=cont - 1, column=0)
+            else:
+                result_label.config(text=res[1])
+                show_table(res[0][-10:])
+        elif isinstance(res, list):
+            if isinstance(res[0], list):
+                cont = 0
+                for row in res:
+                    show_table(row, cont)
+                    cont += len(row) + 1
+                    tk.Label(
+                        table_screen,
+                        bg=main_bg,
+                    ).grid(row=cont - 1, column=0)
+            else:
+                result_label.config(text="\n".join(str(item) for item in res))
+        else:
+            result_label.config(text=str(res))
+    except:
+        result_label.config(
+            text="\n".join(str(res)[i : i + 100] for i in range(0, len(str(res)), 100))
+        )
     result_screen.pack()
+
+
+def show_table(table, row=0):
+    c1 = main_bg
+    c2 = table_bg1
+    for iter in table:
+        col = 0
+        color = c1
+        c1 = c2
+        c2 = color
+        for element in iter:
+            if isinstance(element, str):
+                element = float(element)
+            tk.Label(
+                table_screen,
+                text=str(round(element, 6)),
+                font=(font, size),
+                relief=tk.RIDGE,
+                bg=color,
+                borderwidth=10,
+                highlightbackground=table_bg2,
+                width=10,
+            ).grid(row=row, column=col, sticky="nsew")
+            col += 1
+        row += 1
 
 
 def return_to_main():
@@ -138,10 +178,14 @@ def create_matrix(n, button):
         matb_entries.append(entry)
     matrix_screen2.pack()
     button.pack(pady=20)
+    set_default_values(n)
+
+
+matrix1_entry = tk.Entry(matrix_screen1, font=(font, size1))
 
 
 def get_matrix(screen, button):
-    global matrix_screen1, matrix_screen2, current_screen
+    global matrix_screen1, matrix_screen2, current_screen, matrix1_entry
     matrix_screen1 = tk.Frame(screen, bg=main_bg)
     button.pack_forget()
 
@@ -154,6 +198,7 @@ def get_matrix(screen, button):
     matrix1_label.pack(pady=20)
     matrix1_entry = tk.Entry(matrix_screen1, font=(font, size1))
     matrix1_entry.pack()
+    set_default_values()
 
     matrix1_button = tk.Button(
         matrix_screen1,
@@ -177,6 +222,7 @@ def get_matrix(screen, button):
 # ---- Points Screen ----
 pointsx_entries = []
 pointsy_entries = []
+points_screen = tk.Frame(window, bg=main_bg)
 
 
 def add_row():
@@ -192,6 +238,8 @@ def add_row():
 
 def create_points(screen, button):
     global current_screen, points_screen, pointsx_entries, pointsy_entries
+    pointsx_entries = []
+    pointsy_entries = []
     points_screen = tk.Frame(screen, bg=main_bg)
     current_screen = screen
     button.pack_forget()
@@ -203,6 +251,7 @@ def create_points(screen, button):
     main_screen.pack_forget()
     screen.pack()
     add_row()
+    set_default_values()
     points_screen.pack()
     button.pack(pady=20)
 
@@ -241,6 +290,19 @@ return_button = tk.Button(
     command=return_to_main,
 )
 return_button.pack(pady=10)
+
+
+def toggle_default():
+    global defaults
+    defaults = not defaults
+    set_default_values()
+
+
+defaults = False  # Initial value
+check_button = tk.Checkbutton(
+    sidebar, text="Variables default?", command=toggle_default, bg=sidebar_bg
+)
+check_button.pack(pady=5)
 
 sidebar.pack(side="left", fill="y")
 
@@ -296,9 +358,9 @@ is_show_button = tk.Button(
         methods.incremental_search,
         (
             is_entries[0].get().replace("^", "**"),
-            float(is_entries[1].get()),
-            is_entries[2].get().replace("^", "**"),
-            float(is_entries[3].get()),
+            int(is_entries[1].get()),
+            float(is_entries[2].get()),
+            int(is_entries[3].get()),
         ),
     ),
 )
@@ -361,11 +423,11 @@ tk.Label(
 
 rf_labels = [
     "Función:",
-    "t error:",
     "X Inferior:",
     "X Superior:",
     "Tolerancia:",
     "Iteraciones:",
+    "t error:",
 ]
 rf_entries = [None] * len(rf_labels)
 count = 0
@@ -427,6 +489,7 @@ for label_text in pf_labels:
 
     pf_entries[count] = tk.Entry(punto_fijo, font=(font, size1))
     pf_entries[count].pack()
+    count += 1
 
 
 pf_show_button = tk.Button(
@@ -435,7 +498,7 @@ pf_show_button = tk.Button(
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.punto_fijo,
+        methods.fixed_point,
         (
             pf_entries[0].get().replace("^", "**"),
             pf_entries[1].get().replace("^", "**"),
@@ -472,6 +535,7 @@ for label_text in nr_labels:
 
     nr_entries[count] = tk.Entry(newton_raphson, font=(font, size1))
     nr_entries[count].pack()
+    count += 1
 
 nr_show_button = tk.Button(
     newton_raphson,
@@ -517,6 +581,7 @@ for label_text in s_labels:
 
     s_entries[count] = tk.Entry(secante, font=(font, size1))
     s_entries[count].pack()
+    count += 1
 
 s_show_button = tk.Button(
     secante,
@@ -526,9 +591,9 @@ s_show_button = tk.Button(
     command=lambda: show_result(
         methods.secante,
         (
-            s_entries[1].get().replace("^", "**"),
+            s_entries[0].get().replace("^", "**"),
+            float(s_entries[1].get()),
             float(s_entries[2].get()),
-            float(s_entries[0].get()),
             float(s_entries[3].get()),
             float(s_entries[4].get()),
         ),
@@ -542,12 +607,12 @@ multiple_roots = tk.Frame(window, bg=main_bg)
 
 tk.Label(
     multiple_roots,
-    text="Método de Reices multiples",
+    text="Método de Raices multiples",
     font=(font, size2, "bold"),
     bg=main_bg,
 ).pack(pady=20)
 
-mr_labels = ["X0", "Función:", "df:", "df2:", "Tolerancia:", "Iteraciones:"]
+mr_labels = ["Función:", "df:", "df2:", "X0", "Tolerancia:", "Iteraciones:"]
 mr_entries = [None] * len(mr_labels)
 count = 0
 
@@ -562,6 +627,7 @@ for label_text in mr_labels:
 
     mr_entries[count] = tk.Entry(multiple_roots, font=(font, size1))
     mr_entries[count].pack()
+    count += 1
 
 mr_show_button = tk.Button(
     multiple_roots,
@@ -571,10 +637,10 @@ mr_show_button = tk.Button(
     command=lambda: show_result(
         methods.multiple_roots,
         (
-            float(mr_entries[0].get()),
+            mr_entries[0].get().replace("^", "**"),
             mr_entries[1].get().replace("^", "**"),
             mr_entries[2].get().replace("^", "**"),
-            mr_entries[3].get().replace("^", "**"),
+            float(mr_entries[3].get()),
             float(mr_entries[4].get()),
             float(mr_entries[5].get()),
         ),
@@ -648,7 +714,7 @@ lu_gauss = tk.Frame(window, bg=main_bg)
 
 tk.Label(
     lu_gauss,
-    text="Método de lu_gauss",
+    text="Método de LU de Gauss",
     font=(font, size2, "bold"),
     bg=main_bg,
 ).pack(pady=20)
@@ -668,7 +734,7 @@ LU_partial_decomposition = tk.Frame(window, bg=main_bg)
 
 tk.Label(
     LU_partial_decomposition,
-    text="Método de LU_partial_decomposition",
+    text="Método de Lu Descomposicion parcial",
     font=(font, size2, "bold"),
     bg=main_bg,
 ).pack(pady=20)
@@ -706,7 +772,7 @@ dolittle_fac = tk.Frame(window, bg=main_bg)
 
 tk.Label(
     dolittle_fac,
-    text="Método de dolittle_fac",
+    text="Método de Factorizacion de Dolittle",
     font=(font, size2, "bold"),
     bg=main_bg,
 ).pack(pady=20)
@@ -726,7 +792,7 @@ cholesky_factorization = tk.Frame(window, bg=main_bg)
 
 tk.Label(
     cholesky_factorization,
-    text="Método de cholesky_factorization",
+    text="Método de Factorizacion de Cholesky",
     font=(font, size2, "bold"),
     bg=main_bg,
 ).pack(pady=20)
@@ -764,7 +830,7 @@ def se_on_select(event):
     se_selected_option.ser(se_dropdown.get())
 
 
-se_labels = ["X Inicial", "Tolerancia:", "Iteraciones:"]
+se_labels = ["Tolerancia:", "Iteraciones:"]
 se_entries = [None] * len(se_labels)
 count = 0
 
@@ -779,6 +845,7 @@ for label_text in se_labels:
 
     se_entries[count] = tk.Entry(seidel_ins, font=(font, size1))
     se_entries[count].pack()
+    count += 1
 
 
 tk.Label(
@@ -816,7 +883,6 @@ se_button = tk.Button(
             get_b_values(),
             float(se_entries[0].get()),
             float(se_entries[1].get()),
-            float(se_entries[2].get()),
             se_selected_option,
         ),
     ),
@@ -845,7 +911,7 @@ def j_on_select(event):
     j_selected_option.ser(j_dropdown.get())
 
 
-j_labels = ["X Inicial", "Tolerancia:", "Iteraciones:"]
+j_labels = ["Tolerancia:", "Iteraciones:"]
 j_entries = [None] * len(j_labels)
 count = 0
 
@@ -860,6 +926,7 @@ for label_text in j_labels:
 
     j_entries[count] = tk.Entry(jacobi_ins, font=(font, size1))
     j_entries[count].pack()
+    count += 1
 
 
 tk.Label(
@@ -897,7 +964,6 @@ j_button = tk.Button(
             get_b_values(),
             float(j_entries[0].get()),
             float(j_entries[1].get()),
-            float(j_entries[2].get()),
             j_selected_option,
         ),
     ),
@@ -971,7 +1037,7 @@ tk.Label(
 ).pack(pady=20)
 
 s_entry = tk.Entry(spline, font=(font, size1))
-s_entry.pack(pady=20)
+s_entry.pack()
 
 s_button = tk.Button(
     spline,
@@ -1026,11 +1092,21 @@ button_info = [
     ("Método de Gauss simple", get_matrix, simple_gauss, sg_button),
     ("Método de Gauss de pivote parcial", get_matrix, gauss_partial_pivot, gpp_button),
     ("Método de Gauss de pivote total", get_matrix, gauss_total_pivot, gtp_button),
-    ("Método de lu_gauss", get_matrix, lu_gauss, lug_button),
-    ("Método de LU_partial_decomp", get_matrix, LU_partial_decomposition, lupd_button),
+    ("Método de LU de Gauss", get_matrix, lu_gauss, lug_button),
+    (
+        "Método de LU Descomposicion parcial",
+        get_matrix,
+        LU_partial_decomposition,
+        lupd_button,
+    ),
     ("Método de Crout", get_matrix, crout, c_button),
-    ("Método de dolittle_fac", get_matrix, dolittle_fac, df_button),
-    ("Método de cholesky_factorization", get_matrix, cholesky_factorization, cf_button),
+    ("Método de Factorizacion de Dolittle", get_matrix, dolittle_fac, df_button),
+    (
+        "Método de Factorizacion de Cholesky",
+        get_matrix,
+        cholesky_factorization,
+        cf_button,
+    ),
     ("Método de Seidel", get_matrix, seidel, se_button),
     ("Método de Jacobi", get_matrix, jacobi, j_button),
     ("Método de Vandermonde", create_points, vandermonde_method, v_button),
@@ -1083,14 +1159,111 @@ for text, com, screen, button in button_info:
             command=lambda screen=screen, button=button: create_points(screen, button),
         ).grid(row=row, column=col, padx=5, pady=5)
 
-    row += 1
-    if row > 10:
-        row = 1
-        col += 1
+    col += 1
+    if col > 2:
+        col = 0
+        row += 1
+
+
+def set_default_values(mat=0):
+    global defaults, matrix1_entry
+    entries_list = [
+        is_entries,
+        b_entries,
+        rf_entries,
+        pf_entries,
+        nr_entries,
+        s_entries,
+        mr_entries,
+        j_entries,
+        se_entries,
+        [matrix1_entry],
+    ]
+    if defaults:
+        for entries in entries_list:
+            for entry in entries:
+                entry.delete(0, tk.END)
+
+        values = ["x^3+4^x^2-10", "0", "0.1", "100"]
+        for entry, value in zip(is_entries, values):
+            entry.insert(0, value)
+        values = ["x^3+4^x^2-10", "1", "2", "0.001", "100"]
+        for entry, value in zip(b_entries, values):
+            entry.insert(0, value)
+        values = ["x^3+4^x^2-10", "1", "2", "0.001", "100", "1"]
+        for entry, value in zip(rf_entries, values):
+            entry.insert(0, value)
+        values = [
+            "log(sin(x)^2 + 1)-(1/2)-x",
+            "log(sin(x)^2 + 1)-(1/2)",
+            "-0.5",
+            "0.0000001",
+            "100",
+        ]
+        for entry, value in zip(pf_entries, values):
+            entry.insert(0, value)
+        values = [
+            "log(sin(x)^2 + 1)-(1/2)",
+            "2*(1/(sin(x)^2 + 1))*(sin(x)*cos(x))",
+            "0.5",
+            "0.0000001",
+            "100",
+        ]
+        for entry, value in zip(nr_entries, values):
+            entry.insert(0, value)
+        values = ["log(sin(x)^2 + 1)-(1/2)", "0.5", "1", "0.0000001", "100"]
+        for entry, value in zip(s_entries, values):
+            entry.insert(0, value)
+        values = ["x^3+4*x^2-10", "3*x^2+8*x", "6*x+8", "1", "0.0000001", "100"]
+        for entry, value in zip(mr_entries, values):
+            entry.insert(0, value)
+
+        values = ["0.001", "100"]
+        for entry, value in zip(j_entries, values):
+            entry.insert(0, value)
+        for entry, value in zip(se_entries, values):
+            entry.insert(0, value)
+
+        matrix1_entry.insert(0, "3")
+        if mat == 3:
+            values = [[1, 2, 3], [4, 5, 6], [7, 8, 10]]
+            for row, value in zip(matrix_entries, values):
+                for entry, val in zip(row, value):
+                    entry.insert(0, val)
+            values = [1, -2, 5]
+            for entry, value in zip(matb_entries, values):
+                entry.insert(0, value)
+        if mat == 4:
+            values = [
+                [4, -1, 0, 3],
+                [1, 15.5, 3, 8],
+                [0, -1.3, 4, 1.1],
+                [14, 5, -2, 30],
+            ]
+            for row, value in zip(matrix_entries, values):
+                for entry, val in zip(row, value):
+                    entry.insert(0, val)
+            values = [1, 1, 1, 1]
+            for entry, value in zip(matb_entries, values):
+                entry.insert(0, value)
+
+        add_row()
+        add_row()
+        add_row()
+        values = ["-1", "0", "3", "4"]
+        for entry, value in zip(pointsx_entries, values):
+            entry.insert(0, value)
+        values = ["15.5", "3", "8", "1"]
+        for entry, value in zip(pointsy_entries, values):
+            entry.insert(0, value)
+
+    else:
+        for entries in entries_list:
+            for entry in entries:
+                entry.delete(0, tk.END)
 
 
 # Initially show the input screen
 main_screen.pack()
-
 # Run the application
 window.mainloop()
