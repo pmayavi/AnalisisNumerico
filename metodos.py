@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import math
 import sympy as sym
-from scipy import linalg
 
 def incremental_search(f, x_init, delta_x, num_iterations):
     intervals = []
@@ -844,7 +843,7 @@ def lagrange(arreglo_x, arreglo_y):
     return producto, ls
 
 
-vari1, vari2=seidel([np.array([4,-1,0,3]), [1,15.5,3,8], [0,-1.3,4,1.1],[14,5,-2,30]], [1,1,1,1],[0,0,0,0],0.0000001,100)
+vari1=spline([-2,-1,2,3],[12.1353,6.3678,-4.6109,2.08553],2)
 print("Hola")
 #biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
 #regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
