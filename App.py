@@ -32,6 +32,7 @@ def show_result(method, inputs):
     current_screen.pack_forget()
     matrix_screen1.pack_forget()
     matrix_screen2.pack_forget()
+    points_screen.pack_forget()
     for widget in table_screen.winfo_children():
         widget.grid_forget()
 
@@ -78,6 +79,7 @@ def return_to_main():
     matrix_screen1.pack_forget()
     matrix_screen2.pack_forget()
     result_screen.pack_forget()
+    points_screen.pack_forget()
     current_screen = main_screen
 
     # Show the main screen
@@ -165,12 +167,58 @@ def get_matrix(screen, button):
     matrix_screen2 = tk.Frame(screen, bg=main_bg)
 
     main_screen.pack_forget()
-    screen.pack()
 
     # Show the selected screen
     current_screen = screen
     screen.pack()
     matrix_screen1.pack()
+
+
+# ---- Points Screen ----
+pointsx_entries = []
+pointsy_entries = []
+
+
+def add_row():
+    global pointsx_entries, pointsy_entries
+    entry = tk.Entry(points_screen, width=10)
+    entry.grid(row=len(pointsx_entries) + 1, column=0, pady=10)
+    pointsx_entries.append(entry)
+
+    entry = tk.Entry(points_screen, width=10)
+    entry.grid(row=len(pointsy_entries) + 1, column=1, pady=10)
+    pointsy_entries.append(entry)
+
+
+def create_points(screen, button):
+    global current_screen, points_screen, pointsx_entries, pointsy_entries
+    points_screen = tk.Frame(screen, bg=main_bg)
+    current_screen = screen
+    button.pack_forget()
+    for widget in points_screen.winfo_children():
+        widget.grid_forget()
+    tk.Button(points_screen, text="+", command=add_row, width=10).grid(
+        row=0, column=0, pady=20
+    )
+    main_screen.pack_forget()
+    screen.pack()
+    add_row()
+    points_screen.pack()
+    button.pack(pady=20)
+
+
+def get_x_values():
+    val = []
+    for x in pointsx_entries:
+        val.append(float(x.get()))
+    return np.array(val)
+
+
+def get_y_values():
+    val = []
+    for y in pointsy_entries:
+        val.append(float(y.get()))
+    return np.array(val)
 
 
 # ---- Sidebar ----
@@ -855,79 +903,53 @@ j_button = tk.Button(
     ),
 )
 
-# ---- next_iter Screen ----
-next_iter = tk.Frame(window, bg=main_bg)
+# ---- vandermonde_method Screen ----
+vandermonde_method = tk.Frame(window, bg=main_bg)
 
 tk.Label(
-    next_iter,
-    text="Método de next_iter",
+    vandermonde_method,
+    text="Método de Vandermonde",
     font=(font, size2, "bold"),
     bg=main_bg,
 ).pack(pady=20)
 
-tk.Label(
-    next_iter,
-    bg=main_bg,
-).pack(pady=17)
 
-tk.Label(
-    next_iter,
-    text="X Anterior",
-    font=(font, size),
-    bg=main_bg,
-    pady=10,
-).pack()
-
-ni_entry = tk.Entry(next_iter, font=(font, size1))
-ni_entry.pack()
-
-
-ni_button = tk.Button(
-    next_iter,
+v_button = tk.Button(
+    vandermonde_method,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.next_iter,
-        (get_matrix_values(), get_b_values(), float(ni_entry.get())),
+        methods.vandermonde_method,
+        (
+            get_x_values(),
+            get_y_values(),
+        ),
     ),
 )
 
-# ---- next_iter2 Screen ----
-next_iter2 = tk.Frame(window, bg=main_bg)
+# ---- newton_interpolacion Screen ----
+newton_interpolacion = tk.Frame(window, bg=main_bg)
 
 tk.Label(
-    next_iter2,
-    text="Método de next_iter2",
+    newton_interpolacion,
+    text="Método de Interpolacion de Newton",
     font=(font, size2, "bold"),
     bg=main_bg,
 ).pack(pady=20)
 
-tk.Label(
-    next_iter2,
-    bg=main_bg,
-).pack(pady=17)
 
-tk.Label(
-    next_iter2,
-    text="X Anterior",
-    font=(font, size),
-    bg=main_bg,
-    pady=10,
-).pack()
-
-ni2_entry = tk.Entry(next_iter2, font=(font, size1))
-ni2_entry.pack()
-
-
-ni2_button = tk.Button(
-    next_iter2,
+ni_button = tk.Button(
+    newton_interpolacion,
     text="Resolver",
     font=(font, size1),
     bg=button_bg,
     command=lambda: show_result(
-        methods.next_iter2,
-        (get_matrix_values(), get_b_values(), float(ni2_entry.get())),
+        methods.newton_interpolacion,
+        (
+            get_x_values(),
+            get_y_values(),
+        ),
     ),
 )
 
@@ -950,8 +972,13 @@ button_info = [
     ("Método de cholesky_factorization", get_matrix, cholesky_factorization, cf_button),
     ("Método de Seidel", get_matrix, seidel, se_button),
     ("Método de Jacobi", get_matrix, jacobi, j_button),
-    ("Método de next_iter", get_matrix, next_iter, ni_button),
-    ("Método de next_iter2", get_matrix, next_iter2, ni2_button),
+    ("Método de Vandermonde", create_points, vandermonde_method, v_button),
+    (
+        "Método de Interpolacion de Newton",
+        create_points,
+        newton_interpolacion,
+        ni_button,
+    ),
 ]
 
 # ---- Main Screen ----
@@ -979,7 +1006,7 @@ for text, com, screen, button in button_info:
             width=button_width,
             command=lambda screen=screen: switch_screen(screen),
         ).grid(row=row, column=col, padx=5, pady=5)
-    else:
+    elif com == get_matrix:
         tk.Button(
             main_screen,
             text=text,
@@ -987,6 +1014,15 @@ for text, com, screen, button in button_info:
             bg=button_bg,
             width=button_width,
             command=lambda screen=screen, button=button: get_matrix(screen, button),
+        ).grid(row=row, column=col, padx=5, pady=5)
+    else:
+        tk.Button(
+            main_screen,
+            text=text,
+            font=(font, size1),
+            bg=button_bg,
+            width=button_width,
+            command=lambda screen=screen, button=button: create_points(screen, button),
         ).grid(row=row, column=col, padx=5, pady=5)
 
     row += 1
