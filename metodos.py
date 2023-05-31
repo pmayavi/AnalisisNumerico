@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import math
 import sympy as sym
-
+from scipy import linalg
 
 def incremental_search(f, x_init, delta_x, num_iterations):
     intervals = []
@@ -719,112 +719,55 @@ def newton_interpolacion(x, y):
             Tabla[i][j] = (Tabla[i + 1][j - 1] - Tabla[i][j - 1]) / (x[i + j] - x[i])
     return {"table": (Tabla).tolist(), "coef": (Tabla[0]).tolist()}
 
-def spline(x, y, d):
-    n = len(x)
-    A = np.zeros([(d + 1) * (n - 1), (d + 1) * (n - 1)])
-    b = np.zeros([(d + 1) * (n - 1), 1])
-    cua = []
-    for i in range(0, len(x)):
-        cua.append(x[i] * x[i])
-    cub = []
-    for i in range(0, len(x)):
-        cub.append(x[i] * x[i] * x[i])
-    if d == 1:
-        c = 0
-        h = 0
-        for i in range(0, n - 1):
-            A[i, c] = x[i]
-            A[i, c + 1] = 1
-            b[i] = y[i]
-            c = c + 2
-            h = h + 1
-        c = 0
-        for i in range(1, n):
-            A[h, c] = x[i]
-            A[h, c + 1] = 1
-            b[h] = y[i]
-            c = c + 2
-            h = h + 1
-    elif d == 2:
-        c = 0
-        h = 0
-        for i in range(0, n - 1):
-            A[i, c] = cua[i]
-            A[i, c + 1] = x[i]
-            A[i, c + 2] = 1
-            b[i] = y[i]
-            c = c + 3
-            h = h + 1
-        c = 0
-        for i in range(1, n):
-            A[h, c] = cua[i]
-            A[h, c + 1] = x[i]
-            A[h, c + 2] = 1
-            b[h] = y[i]
-            c = c + 3
-            h = h + 1
-        c = 0
-        for i in range(1, n - 1):
-            A[h, c] = 2 * x[i]
-            A[h, c + 1] = 1
-            A[h, c + 3] = -2 * x[i]
-            A[h, c + 4] = -1
-            b[h] = 0
-            c = c + 4
-            h = h + 1
-        A[h, 0] = 2
-        b[h] = 0
-    elif d == 3:
-        c = 0
-        h = 0
-        for i in range(0, n - 1):
-            A[i, c] = cub[i]
-            A[i, c + 1] = cua[i]
-            A[i, c + 2] = x[i]
-            A[i, c + 3] = 1
-            b[i] = y[i]
-            c = c + 4
-            h = h + 1
-        c = 0
-        for i in range(1, n):
-            A[h, c] = cub[i]
-            A[h, c + 1] = cua[i]
-            A[h, c + 2] = x[i]
-            A[h, c + 3] = 1
-            b[h] = y[i]
-            c = c + 4
-            h = h + 1
-        c = 0
-        for i in range(1, n - 1):
-            A[h, c] = 3 * cua[i]
-            A[h, c + 1] = 2 * x[i]
-            A[h, c + 2] = 1
-            A[h, c + 4] = -3 * cua[i]
-            A[h, c + 5] = -2 * x[i]
-            A[h, c + 6] = -1
-            b[h] = 0
-            c = c + 4
-            h = h + 1
-        c = 0
-        for i in range(1, n - 1):
-            A[h, c] = 6 * x[i]
-            A[h, c + 1] = 2
-            A[h, c + 4] = -6 * x[i]
-            A[h, c + 5] = -2
-            b[h] = 0
-            c = c + 4
-            h = h + 1
-        A[h, 0] = 6 * x[1]
-        A[h, 1] = 2
-        b[h] = 0
-        h = h + 1
-        A[h, c] = 6 * x[n - 1]
-        A[h, c + 1] = 2
-        b[h] = 0
-    val = np.linalg.inv(A).dot(b)
-    Tabla = np.reshape(val, (n - 1, d + 1))
-    return Tabla.tolist()
-
+def spline(x, y):
+    x = np.array(x)
+    y = np.array(y)
+    n = x.size
+    m = 4*(n-1)
+    A = np.zeros((m,m))
+    b = np.zeros((m,1))
+    Coef = np.zeros((n-1,4))
+    i = 0
+    #Interpolating condition
+    while i < x.size-1:
+        A[i+1,4*i:4*i+4]= np.hstack((x[i+1]**3,x[i+1]**2,x[i+1],1)) 
+        b[i+1]=y[i+1]
+        i = i+1
+    A[0,0:4] = np.hstack((x[0]**3,x[0]**2,x[0]**1,1))
+    b[0] = y[0]
+    #Condition of continuity
+    i = 1
+    while i < x.size-1:
+        A[x.size-1+i,4*i-4:4*i+4] = np.hstack((x[i]**3,x[i]**2,x[i],1,-x[i]**3,-x[i]**2,-x[i],-1))
+        b[x.size-1+i] = 0
+        i = i+1
+    #Condition of smoothness
+    i = 1
+    while i < x.size-1:
+        A[2*n-3+i,4*i-4:4*i+4] = np.hstack((3*x[i]**2,2*x[i],1,0,-3*x[i]**2,-2*x[i],-1,0))
+        b[2*n-3+i] = 0
+        i = i+1
+    #Concavity condition
+    i = 1
+    while i < x.size-1:
+        A[3*n-5+i,4*i-4:4*i+4] = np.hstack((6*x[i],2,0,0,-6*x[i],-2,0,0))
+        b[n+5+i] = 0
+        i = i+1
+    #Boundary conditions  
+    A[m-2,0:2]=[6*x[0],2]
+    b[m-2]=0
+    A[m-1,m-4:m-2]=[6*x[x.size-1],2]
+    b[m-1]=0
+    Saux = linalg.solve(A,b)
+    #Order Coefficients
+    i = 0
+    j = 0
+    while i < n-1:
+        Coef[i,:] = np.hstack((Saux[j],Saux[j+1],Saux[j+2],Saux[j+3]))
+        i = i+1
+        j = j + 4
+    output = Coef
+    return output
 def lagrange(arreglo_x, arreglo_y):
     puntos=[]
     puntos.append(arreglo_x)
