@@ -1049,7 +1049,7 @@ s_button = tk.Button(
         (
             get_x_values(),
             get_y_values(),
-            float(s_entry.get()),
+            int(s_entry.get()),
         ),
     ),
 )
