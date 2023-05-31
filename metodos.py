@@ -493,10 +493,11 @@ def LU_partial_decomposition(a, b):
         for j in range(i + 1, U.shape[1]):
             B[i] -= U[i, j] * B[j]
         B[i] = B[i] / U[i, i]
-
     return PF, LF, U, B
 
-def crout(a, b):
+def crout(A, B):
+    a=np.array(A)
+    b=np.array(B)
     n = a.shape[0]
     lower_tri = np.identity(n, dtype=np.float64)
     upper_tri = np.identity(n, dtype=np.float64)
@@ -523,7 +524,9 @@ def crout(a, b):
     z = progressive_substitution(to_aug(lower_tri, b))
     return res, regressive_substitution(to_aug(upper_tri, z))
 
-def dolittle_fac(a, b):
+def dolittle_fac(A, B):
+    a=np.array(A)
+    b=np.array(B)
     size = a.shape[0]
     lower_tri = np.identity(size, dtype=np.float64)
     upper_tri = np.identity(size, dtype=np.float64)
@@ -862,7 +865,7 @@ def lagrange(arreglo_x, arreglo_y):
     return producto, ls
 
 
-LU_partial_decomposition([[2,-1,0,3], [1,0.5,3,8], [0,13,-2,11],[14,5,-2,3]], [1,1,1,1])
+vari1, vari2=crout([[4,-1,0,3], [1,15.5,3,8], [0,-1.3,-4,1.1],[14,5,-2,30]], [1,1,1,1])
 print("Hola")
 #biseccion("x**3+4**x**2-10", 1, 2, 0.001, 100)
 #regla_falsa("x**3+4**x**2-10", 1, 2, 0.001, 100)
